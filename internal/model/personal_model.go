@@ -9,7 +9,10 @@ type Personal struct {
 	UserName string `json:"username" gorm:"not null;unique"`
 	Email    string `json:"email" gorm:"not null;unique"`
 	Password string `json:"password" gorm:"not null"`
+	WorkExperiences []WorkExperience 
 	UserType string `json:"usertype" gorm:"not null"`
+	Abilities []Ability `gorm:"many2many:personal-ability;"`
+	Universities []University `gorm:"many2many:personal-university;"`
 }
 
 type Authentication struct {
