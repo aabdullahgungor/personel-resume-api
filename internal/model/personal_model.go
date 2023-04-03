@@ -9,6 +9,7 @@ type Personal struct {
 	UserName string `json:"username" gorm:"not null;unique"`
 	Email    string `json:"email" gorm:"not null;unique"`
 	Password string `json:"password" gorm:"not null"`
+	UserType string `json:"usertype" gorm:"not null"`
 }
 
 type Authentication struct {
