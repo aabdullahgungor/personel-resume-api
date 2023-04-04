@@ -12,7 +12,7 @@ import (
 
 type IPersonalRepository interface {
 	GetAllPersonals() ([]model.Personal, error)
-	GetPersonalById() (model.Personal, error)
+	GetPersonalById(id int) (model.Personal, error)
 	CreatePersonal(personal *model.Personal) error
 	EditPersonal(personal *model.Personal) error
 	DeletePersonal(id int) error

@@ -12,7 +12,7 @@ import (
 
 type IWorkExperienceRepository interface {
 	GetAllWorkExperiences() ([]model.WorkExperience, error)
-	GetWorkExperienceById() (model.WorkExperience, error)
+	GetWorkExperienceById(id int) (model.WorkExperience, error)
 	CreateWorkExperience(workExperience *model.WorkExperience) error
 	EditWorkExperience(workExperience *model.WorkExperience) error
 	DeleteWorkExperience(id int) error
