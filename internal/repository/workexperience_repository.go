@@ -10,6 +10,14 @@ import (
 	"gorm.io/gorm"
 )
 
+type IWorkExperienceRepository interface {
+	GetAllWorkExperiences() ([]model.WorkExperience, error)
+	GetWorkExperienceById() (model.WorkExperience, error)
+	CreateWorkExperience(workExperience *model.WorkExperience) error
+	EditWorkExperience(workExperience *model.WorkExperience) error
+	DeleteWorkExperience(id int) error
+}
+
 var (
 	ErrWorkExperienceNotFound = errors.New("FromRepository - workExperience  not found")
 )

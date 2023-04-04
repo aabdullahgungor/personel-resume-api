@@ -10,6 +10,14 @@ import (
 	"gorm.io/gorm"
 )
 
+type IAbilityRepository interface {
+	GetAllAbilities() ([]model.Ability, error)
+	GetAbilityById() (model.Ability, error)
+	CreateAbility(ability *model.Ability) error
+	EditAbility(ability *model.Ability) error
+	DeleteAbility(id int) error
+}
+
 var (
 	ErrAbilityNotFound = errors.New("FromRepository - ability not found")
 )
