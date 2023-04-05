@@ -37,7 +37,7 @@ func NewPostgreSqlUniversityRepository() *PostgreSqlUniversityRepository {
 }
 
 
-func (p *PostgreSqlUniversityRepository) GetUniversities() ([]model.University, error){
+func (p *PostgreSqlUniversityRepository) GetAllUniversities() ([]model.University, error){
 
 	var universities []model.University
 	err := p.connectionPool.Find(&universities)
