@@ -34,7 +34,7 @@ func NewPostgreSqlWorkExperienceRepository() *PostgreSqlWorkExperienceRepository
 		connectionPool: db,
 	}
 }
-func (p *PostgreSqlWorkExperienceRepository) GetWorkExperiences() ([]model.WorkExperience, error){
+func (p *PostgreSqlWorkExperienceRepository) GetAllWorkExperiences() ([]model.WorkExperience, error){
 
 	var workExperiences []model.WorkExperience
 	err := p.connectionPool.Find(&workExperiences)
