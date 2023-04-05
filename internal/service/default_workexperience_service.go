@@ -8,6 +8,14 @@ import (
 	"github.com/aabdullahgungor/personal-resume-api/internal/repository"
 )
 
+type IWorkExperienceService interface {
+	GetAll() ([]model.WorkExperience, error)
+	GetById(id string) (model.WorkExperience, error)
+	Create(workExperience *model.WorkExperience) error
+	Edit(workExperience *model.WorkExperience) error
+	Delete(id string) error
+}
+
 var ( 
 	ErrWorkExperienceIDIsNotValid       = errors.New("WorkExperience id is not valid")
 	ErrWorkExperienceNotFound           = errors.New("WorkExperience cannot be found")
