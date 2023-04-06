@@ -7,5 +7,5 @@ type Experience struct {
 	StartYear   string `gorm:"column:start_year" json:"startyear"`
 	FinishYear  string `gorm:"column:finish_year" json:"finishyear"`
 	PersonalID  int    `gorm:"column:personal_id" json:"personal_id"`
-	//Personal    Personal
+	Personal    Personal
 }
