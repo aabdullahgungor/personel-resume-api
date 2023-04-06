@@ -22,7 +22,7 @@ func NewWorkExperienceController(ws service.IWorkExperienceService) *workExperie
 func (ws *workExperienceController) GetAllWorkExperiences(context *gin.Context) {
 	workExperiences, err := ws.service.GetAll()
 	if err != nil {
-		context.IndentedJSON(http.StatusNotFound,gin.H{"error": "WorkExperiences cannot show: " + err.Error(), })
+		context.IndentedJSON(http.StatusNotFound,gin.H{"error": err.Error(), })
 		return
 	}
 	context.Header("Content-Type", "application/json")
@@ -33,13 +33,13 @@ func (ws *workExperienceController) GetWorkExperienceById(context *gin.Context) 
 	workExperience, err := ws.service.GetById(str_id)
 	if err != nil {
 	 	if errors.Is(err, service.ErrWorkExperienceIDIsNotValid) {
-	 		context.IndentedJSON(http.StatusBadRequest, gin.H{"error": "id is not valid"+err.Error()})
+	 		context.IndentedJSON(http.StatusNotFound, gin.H{"error": err.Error()})
 	 		return
 	 	} else if  errors.Is(err, service.ErrWorkExperienceNotFound) {
-	 		context.IndentedJSON(http.StatusNotFound, gin.H{"error": "WorkExperience cannot be found"+err.Error()})
+	 		context.IndentedJSON(http.StatusNotFound, gin.H{"error": err.Error()})
 	 		return
 	 	}
-	 	context.IndentedJSON(http.StatusInternalServerError, gin.H{"error":err.Error()})
+	 	context.IndentedJSON(http.StatusBadRequest, gin.H{"error":err.Error()})
 	 	return
 	} 
 	context.Header("Content-Type", "application/json")
@@ -67,6 +67,7 @@ func (ws *workExperienceController) CreateWorkExperience(context *gin.Context) {
 	context.IndentedJSON(http.StatusCreated, gin.H{"message":"WorkExperience has been created"})
 }
 func (ws *workExperienceController) EditWorkExperience(context *gin.Context) {
+	
 	var workExperience model.WorkExperience
 	err := context.ShouldBindJSON(&workExperience)
 
@@ -93,13 +94,13 @@ func (ws *workExperienceController) DeleteWorkExperience(context *gin.Context) {
 	err := ws.service.Delete(str_id)
 	if err != nil {
 		if errors.Is(err, service.ErrWorkExperienceIDIsNotValid) {
-			context.IndentedJSON(http.StatusBadRequest, gin.H{"error": "id is not valid"+err.Error()})
+			context.IndentedJSON(http.StatusNotFound, gin.H{"error": err.Error()})
 			return
 		} else if  errors.Is(err, service.ErrWorkExperienceNotFound) {
-			context.IndentedJSON(http.StatusNotFound, gin.H{"error": "WorkExperience cannot be found"+err.Error()})
+			context.IndentedJSON(http.StatusNotFound, gin.H{"error": err.Error()})
 			return
 		}
-		context.IndentedJSON(http.StatusInternalServerError, gin.H{"error":err.Error()})
+		context.IndentedJSON(http.StatusBadRequest, gin.H{"error":err.Error()})
 		return
 	}
 

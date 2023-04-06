@@ -39,7 +39,7 @@ func (d *DefaultWorkExperienceService) GetById(id string) (model.WorkExperience,
 
 	int_id, errId := strconv.Atoi(id)
 	if errId != nil {
-		return model.WorkExperience{}, errId
+		return model.WorkExperience{}, ErrWorkExperienceIDIsNotValid
 	}
 	workExperience, err := d.workExperienceRepo.GetWorkExperienceById(int_id)
 
@@ -53,17 +53,12 @@ func (d *DefaultWorkExperienceService) Create(workExperience *model.WorkExperien
 	return d.workExperienceRepo.CreateWorkExperience(workExperience)
 }
 func (d *DefaultWorkExperienceService) Edit(workExperience *model.WorkExperience) error {
-	err := d.workExperienceRepo.EditWorkExperience(workExperience)
-	if err != nil {
-		return ErrWorkExperienceNotFound
-	}
-
-	return nil
+	return d.workExperienceRepo.EditWorkExperience(workExperience)
 }
 func (d *DefaultWorkExperienceService) Delete(id string) error {
 	int_id, errId := strconv.Atoi(id)
 	if errId != nil {
-		return errId
+		return ErrWorkExperienceIDIsNotValid
 	}
 	err := d.workExperienceRepo.DeleteWorkExperience(int_id)
 
