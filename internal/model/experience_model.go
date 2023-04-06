@@ -1,6 +1,6 @@
 package model
 
-type WorkExperience struct {
+type Experience struct {
 	ID          uint   `gorm:"primaryKey;autoIncrement" json:"id"`
 	CompanyName string `gorm:"column:company_name;not null" json:"company-name"  `
 	Position    string `gorm:"column:position" json:"position"`
