@@ -39,7 +39,7 @@ func (d *DefaultUniversityService) GetById(id string) (model.University, error) 
 
 	int_id, errId := strconv.Atoi(id)
 	if errId != nil {
-		return model.University{}, errId
+		return model.University{}, ErrUniversityIDIsNotValid
 	}
 	university, err := d.universityRepo.GetUniversityById(int_id)
 
@@ -53,17 +53,12 @@ func (d *DefaultUniversityService) Create(university *model.University) error {
 	return d.universityRepo.CreateUniversity(university)
 }
 func (d *DefaultUniversityService) Edit(university *model.University) error {
-	err := d.universityRepo.EditUniversity(university)
-	if err != nil {
-		return ErrUniversityNotFound
-	}
-
-	return nil
+	return d.universityRepo.EditUniversity(university)
 }
 func (d *DefaultUniversityService) Delete(id string) error {
 	int_id, errId := strconv.Atoi(id)
 	if errId != nil {
-		return errId
+		return ErrUniversityIDIsNotValid
 	}
 	err := d.universityRepo.DeleteUniversity(int_id)
 

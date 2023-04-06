@@ -22,7 +22,7 @@ func NewUniversityController(us service.IUniversityService) *universityControlle
 func (us *universityController) GetAllUniversities(context *gin.Context) {
 	universities, err := us.service.GetAll()
 	if err != nil {
-		context.IndentedJSON(http.StatusNotFound,gin.H{"error": "Universities cannot show: " + err.Error(), })
+		context.IndentedJSON(http.StatusNotFound,gin.H{"error": err.Error(), })
 		return
 	}
 	context.Header("Content-Type", "application/json")
@@ -33,19 +33,20 @@ func (us *universityController) GetUniversityById(context *gin.Context) {
 	university, err := us.service.GetById(str_id)
 	if err != nil {
 	 	if errors.Is(err, service.ErrUniversityIDIsNotValid) {
-	 		context.IndentedJSON(http.StatusBadRequest, gin.H{"error": "id is not valid"+err.Error()})
+	 		context.IndentedJSON(http.StatusNotFound, gin.H{"error": err.Error()})
 	 		return
 	 	} else if  errors.Is(err, service.ErrUniversityNotFound) {
-	 		context.IndentedJSON(http.StatusNotFound, gin.H{"error": "University cannot be found"+err.Error()})
+	 		context.IndentedJSON(http.StatusNotFound, gin.H{"error": err.Error()})
 	 		return
 	 	}
-	 	context.IndentedJSON(http.StatusInternalServerError, gin.H{"error":err.Error()})
+	 	context.IndentedJSON(http.StatusBadRequest, gin.H{"error":err.Error()})
 	 	return
 	} 
 	context.Header("Content-Type", "application/json")
 	context.IndentedJSON(http.StatusOK, university)
 }
 func (us *universityController) CreateUniversity(context *gin.Context) {
+	
 	var university model.University
 	err := context.ShouldBindJSON(&university)
 
@@ -93,13 +94,13 @@ func (us *universityController) DeleteUniversity(context *gin.Context) {
 	err := us.service.Delete(str_id)
 	if err != nil {
 		if errors.Is(err, service.ErrUniversityIDIsNotValid) {
-			context.IndentedJSON(http.StatusBadRequest, gin.H{"error": "id is not valid"+err.Error()})
+			context.IndentedJSON(http.StatusNotFound, gin.H{"error": err.Error()})
 			return
 		} else if  errors.Is(err, service.ErrUniversityNotFound) {
-			context.IndentedJSON(http.StatusNotFound, gin.H{"error": "University cannot be found"+err.Error()})
+			context.IndentedJSON(http.StatusNotFound, gin.H{"error": err.Error()})
 			return
 		}
-		context.IndentedJSON(http.StatusInternalServerError, gin.H{"error":err.Error()})
+		context.IndentedJSON(http.StatusBadRequest, gin.H{"error":err.Error()})
 		return
 	}
 
