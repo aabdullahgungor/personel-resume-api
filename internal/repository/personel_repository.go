@@ -39,7 +39,7 @@ func NewPostgreSqlPersonalRepository() *PostgreSqlPersonalRepository {
 func (p *PostgreSqlPersonalRepository) GetAllPersonals() ([]model.Personal, error){
 
 	var personals []model.Personal
-	result := p.connectionPool.Find(&personals)
+	result := p.connectionPool.Preload("Abilities").Preload("Universities").Find(&personals)
 	if result.Error != nil {
         return []model.Personal{}, ErrPersonalNotFound
 	}
