@@ -15,7 +15,7 @@ func WorkExperienceConfigRouters(router *gin.Engine) *gin.Engine {
 
 	main := router.Group("api/v1")
 	{
-		workExperiences := main.Group("workExperiences")
+		workExperiences := main.Group("experiences")
 		{
 			workExperiences.GET("/", experienceController.GetAllExperiences)
 			workExperiences.GET("/:id", experienceController.GetExperienceById)
