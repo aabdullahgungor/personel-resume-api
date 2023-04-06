@@ -1,8 +1,7 @@
 package model
 
-import "gorm.io/gorm"
-
 type University struct {
-	gorm.Model
-	UniversityName     string `json:"university" gorm:"column:university;not null" `
+	ID             uint       `gorm:"primaryKey;autoIncrement" json:"id"`
+	UniversityName string     `gorm:"column:university;not null" json:"university"`
+	Personals      []Personal `gorm:"many2many:personal_university"`
 }

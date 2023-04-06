@@ -1,11 +1,11 @@
 package model
 
-import "gorm.io/gorm"
-
 type WorkExperience struct {
-	gorm.Model
-	CompanyName string  `json:"company-name" gorm:"not null" `
-	Position string `json:"position"`
-	StartYear string `json:"startyear"`
-	FinishYear string `json:"finishyear"`
+	ID          uint   `gorm:"primaryKey;autoIncrement" json:"id"`
+	CompanyName string `gorm:"column:company_name;not null" json:"company-name"  `
+	Position    string `gorm:"column:position" json:"position"`
+	StartYear   string `gorm:"column:start_year" json:"startyear"`
+	FinishYear  string `gorm:"column:finish_year" json:"finishyear"`
+	PersonalID  int    `gorm:"column:personal_id" json:"personal_id"`
+	Personal    Personal
 }

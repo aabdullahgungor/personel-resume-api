@@ -1,18 +1,16 @@
 package model
 
-import "gorm.io/gorm"
-
 type Personal struct {
-	gorm.Model
-	Name     string `json:"name" gorm:"not null" `
-	Surname  string `json:"surname" gorm:"not null"`
-	UserName string `json:"username" gorm:"not null;unique"`
-	Email    string `json:"email" gorm:"not null;unique"`
-	Password string `json:"password" gorm:"not null"`
-	WorkExperiences []WorkExperience 
-	UserType string `json:"usertype" gorm:"not null"`
-	Abilities []Ability `gorm:"many2many:personal-ability;"`
-	Universities []University `gorm:"many2many:personal-university;"`
+	ID              uint             `gorm:"primaryKey;autoIncrement" json:"id"`
+	Name            string           `gorm:"column:name;not null" json:"name" `
+	Surname         string           `gorm:"column:surname;not null" json:"surname" `
+	UserName        string           `gorm:"column:username;not null;unique" json:"username"`
+	Email           string           `gorm:"column:email;not null;unique" json:"email"`
+	Password        string           `gorm:"column:password;not null" json:"password"`
+	WorkExperiences []WorkExperience `gorm:"ForeignKey:PersonalID" json:"work_experiences"`
+	UserType        string           `gorm:"column:usertype;not null" json:"usertype"`
+	Abilities       []Ability        `gorm:"many2many:personal_ability"`
+	Universities    []University     `gorm:"many2many:personal_university"`
 }
 
 type Authentication struct {
