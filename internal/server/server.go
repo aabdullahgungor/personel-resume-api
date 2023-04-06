@@ -14,20 +14,16 @@ type Server struct {
 
 func NewServer() Server {
 	return Server{
-		port: "8000",
+		port: "8080",
 		server: gin.Default(),
 	}
 }
 
 func (s *Server) Run() {
-	abilityRouter := router.AbilityConfigRouters(s.server)
-	personalRouter := router.PersonalConfigRouters(s.server)
-	universityRouter := router.UniversityConfigRouters(s.server)
-	workExperienceRouter := router.WorkExperienceConfigRouters(s.server)
-
+	gin.SetMode(gin.ReleaseMode)
+	router := router.ConfigRouters(s.server)
+	
 	log.Printf("Server running at port: %v", s.port)
-	log.Fatal(abilityRouter.Run("localhost:" + s.port))
-	log.Fatal(personalRouter.Run("localhost:" + s.port))
-	log.Fatal(universityRouter.Run("localhost:" + s.port))
-	log.Fatal(workExperienceRouter.Run("localhost:" + s.port))
+	log.Fatal(router.Run("localhost:" + s.port))
+	
 }
