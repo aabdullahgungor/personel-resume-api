@@ -22,7 +22,7 @@ func NewAbilityController(as service.IAbilityService) *abilityController {
 func (as *abilityController) GetAllAbilities(context *gin.Context) {
 	abilities, err := as.service.GetAll()
 	if err != nil {
-		context.IndentedJSON(http.StatusNotFound,gin.H{"error": "Abilities cannot show: " + err.Error(), })
+		context.IndentedJSON(http.StatusNotFound,gin.H{"error": err.Error()})
 		return
 	}
 	context.Header("Content-Type", "application/json")
@@ -33,13 +33,13 @@ func (as *abilityController) GetAbilityById(context *gin.Context) {
 	ability, err := as.service.GetById(str_id)
 	if err != nil {
 	 	if errors.Is(err, service.ErrAbilityIDIsNotValid) {
-	 		context.IndentedJSON(http.StatusBadRequest, gin.H{"error": "id is not valid"+err.Error()})
+	 		context.IndentedJSON(http.StatusNotFound, gin.H{"error": err.Error()})
 	 		return
 	 	} else if  errors.Is(err, service.ErrAbilityNotFound) {
-	 		context.IndentedJSON(http.StatusNotFound, gin.H{"error": "Ability cannot be found"+err.Error()})
+	 		context.IndentedJSON(http.StatusNotFound, gin.H{"error": err.Error()})
 	 		return
 	 	}
-	 	context.IndentedJSON(http.StatusInternalServerError, gin.H{"error":err.Error()})
+	 	context.IndentedJSON(http.StatusBadRequest, gin.H{"error":err.Error()})
 	 	return
 	} 
 	context.Header("Content-Type", "application/json")
@@ -93,13 +93,13 @@ func (as *abilityController) DeleteAbility(context *gin.Context) {
 	err := as.service.Delete(str_id)
 	if err != nil {
 		if errors.Is(err, service.ErrAbilityIDIsNotValid) {
-			context.IndentedJSON(http.StatusBadRequest, gin.H{"error": "id is not valid"+err.Error()})
+			context.IndentedJSON(http.StatusNotFound, gin.H{"error": err.Error()})
 			return
 		} else if  errors.Is(err, service.ErrAbilityNotFound) {
-			context.IndentedJSON(http.StatusNotFound, gin.H{"error": "Ability cannot be found"+err.Error()})
+			context.IndentedJSON(http.StatusNotFound, gin.H{"error": err.Error()})
 			return
 		}
-		context.IndentedJSON(http.StatusInternalServerError, gin.H{"error":err.Error()})
+		context.IndentedJSON(http.StatusBadRequest, gin.H{"error":err.Error()})
 		return
 	}
 

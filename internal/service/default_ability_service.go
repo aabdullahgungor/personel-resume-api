@@ -39,12 +39,12 @@ func (d *DefaultAbilityService) GetById(id string) (model.Ability, error) {
 
 	int_id, errId := strconv.Atoi(id)
 	if errId != nil {
-		return model.Ability{}, errId
+		return model.Ability{}, ErrAbilityIDIsNotValid
 	}
 	ability, err := d.abilityRepo.GetAbilityById(int_id)
 
 	if err != nil {
-		return model.Ability{}, ErrAbilityNotFound
+		return model.Ability{}, err
 	}
 
 	return ability, nil
@@ -53,17 +53,12 @@ func (d *DefaultAbilityService) Create(ability *model.Ability) error {
 	return d.abilityRepo.CreateAbility(ability)
 }
 func (d *DefaultAbilityService) Edit(ability *model.Ability) error {
-	err := d.abilityRepo.EditAbility(ability)
-	if err != nil {
-		return ErrAbilityNotFound
-	}
-
-	return nil
+	return d.abilityRepo.EditAbility(ability)
 }
 func (d *DefaultAbilityService) Delete(id string) error {
 	int_id, errId := strconv.Atoi(id)
 	if errId != nil {
-		return errId
+		return ErrAbilityIDIsNotValid
 	}
 	err := d.abilityRepo.DeleteAbility(int_id)
 
