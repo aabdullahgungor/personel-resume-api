@@ -23,7 +23,6 @@ var (
 	ErrPersonalEmailIsNotEmpty = errors.New("Personal email cannot be empty")
 )
 
-
 type DefaultPersonalService struct {
 	personalRepo repository.IPersonalRepository
 }
@@ -41,12 +40,12 @@ func (d *DefaultPersonalService) GetById(id string) (model.Personal, error) {
 
 	int_id, errId := strconv.Atoi(id)
 	if errId != nil {
-		return model.Personal{}, errId
+		return model.Personal{}, ErrPersonalIDIsNotValid
 	}
 	personal, err := d.personalRepo.GetPersonalById(int_id)
 
 	if err != nil {
-		return model.Personal{}, ErrPersonalNotFound
+		return model.Personal{}, err
 	}
 
 	return personal, nil
@@ -55,17 +54,12 @@ func (d *DefaultPersonalService) Create(personal *model.Personal) error {
 	return d.personalRepo.CreatePersonal(personal)
 }
 func (d *DefaultPersonalService) Edit(personal *model.Personal) error {
-	err := d.personalRepo.EditPersonal(personal)
-	if err != nil {
-		return ErrPersonalNotFound
-	}
-
-	return nil
+	return d.personalRepo.EditPersonal(personal)
 }
 func (d *DefaultPersonalService) Delete(id string) error {
 	int_id, errId := strconv.Atoi(id)
 	if errId != nil {
-		return errId
+		return ErrPersonalIDIsNotValid
 	}
 	err := d.personalRepo.DeletePersonal(int_id)
 
