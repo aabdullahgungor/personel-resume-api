@@ -39,8 +39,8 @@ func NewPostgreSqlAbilityRepository() *PostgreSqlAbilityRepository {
 func (p *PostgreSqlAbilityRepository) GetAllAbilities() ([]model.Ability, error){
 
 	var abilities []model.Ability
-	err := p.connectionPool.Find(&abilities)
-	if err != nil {
+	result := p.connectionPool.Find(&abilities)
+	if result.Error != nil {
         return []model.Ability{}, ErrAbilityNotFound
 	}
 
@@ -49,8 +49,8 @@ func (p *PostgreSqlAbilityRepository) GetAllAbilities() ([]model.Ability, error)
 func (p *PostgreSqlAbilityRepository) GetAbilityById(id int) (model.Ability, error) {
 
 	var ability model.Ability
-	err := p.connectionPool.First(&ability, id)
-	if err != nil {
+	result := p.connectionPool.First(&ability, id)
+	if result.Error != nil {
 		return model.Ability{}, ErrAbilityNotFound
 	}
 

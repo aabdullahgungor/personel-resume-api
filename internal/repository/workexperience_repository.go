@@ -37,8 +37,8 @@ func NewPostgreSqlWorkExperienceRepository() *PostgreSqlWorkExperienceRepository
 func (p *PostgreSqlWorkExperienceRepository) GetAllWorkExperiences() ([]model.WorkExperience, error){
 
 	var workExperiences []model.WorkExperience
-	err := p.connectionPool.Find(&workExperiences)
-	if err != nil {
+	result := p.connectionPool.Find(&workExperiences)
+	if result.Error != nil {
         return []model.WorkExperience{}, ErrWorkExperienceNotFound
 	}
 
@@ -47,8 +47,8 @@ func (p *PostgreSqlWorkExperienceRepository) GetAllWorkExperiences() ([]model.Wo
 func (p *PostgreSqlWorkExperienceRepository) GetWorkExperienceById(id int) (model.WorkExperience, error) {
 
 	var workExperience model.WorkExperience
-	err := p.connectionPool.First(&workExperience, id)
-	if err != nil {
+	result := p.connectionPool.First(&workExperience, id)
+	if result.Error != nil {
 		return model.WorkExperience{}, ErrWorkExperienceNotFound
 	}
 

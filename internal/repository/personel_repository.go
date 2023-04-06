@@ -39,8 +39,8 @@ func NewPostgreSqlPersonalRepository() *PostgreSqlPersonalRepository {
 func (p *PostgreSqlPersonalRepository) GetAllPersonals() ([]model.Personal, error){
 
 	var personals []model.Personal
-	err := p.connectionPool.Find(&personals)
-	if err != nil {
+	result := p.connectionPool.Find(&personals)
+	if result.Error != nil {
         return []model.Personal{}, ErrPersonalNotFound
 	}
 
@@ -49,8 +49,8 @@ func (p *PostgreSqlPersonalRepository) GetAllPersonals() ([]model.Personal, erro
 func (p *PostgreSqlPersonalRepository) GetPersonalById(id int) (model.Personal, error) {
 
 	var personal model.Personal
-	err := p.connectionPool.First(&personal, id)
-	if err != nil {
+	result := p.connectionPool.First(&personal, id)
+	if result.Error != nil {
 		return model.Personal{}, ErrPersonalNotFound
 	}
 

@@ -40,8 +40,8 @@ func NewPostgreSqlUniversityRepository() *PostgreSqlUniversityRepository {
 func (p *PostgreSqlUniversityRepository) GetAllUniversities() ([]model.University, error){
 
 	var universities []model.University
-	err := p.connectionPool.Find(&universities)
-	if err != nil {
+	result := p.connectionPool.Find(&universities)
+	if result.Error != nil {
         return []model.University{}, ErrUniversityNotFound
 	}
 
@@ -50,8 +50,8 @@ func (p *PostgreSqlUniversityRepository) GetAllUniversities() ([]model.Universit
 func (p *PostgreSqlUniversityRepository) GetUniversityById(id int) (model.University, error) {
 
 	var university model.University
-	err := p.connectionPool.First(&university, id)
-	if err != nil {
+	result := p.connectionPool.First(&university, id)
+	if result.Error != nil {
 		return model.University{}, ErrUniversityNotFound
 	}
 
