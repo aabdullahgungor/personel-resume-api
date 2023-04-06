@@ -49,7 +49,7 @@ func (p *PostgreSqlPersonalRepository) GetAllPersonals() ([]model.Personal, erro
 func (p *PostgreSqlPersonalRepository) GetPersonalById(id int) (model.Personal, error) {
 
 	var personal model.Personal
-	result := p.connectionPool.First(&personal, id)
+	result := p.connectionPool.Preload("Abilities").Preload("Universities").First(&personal, id)
 	if result.Error != nil {
 		return model.Personal{}, ErrPersonalNotFound
 	}
