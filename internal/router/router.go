@@ -2,6 +2,7 @@ package router
 
 import (
 	"github.com/aabdullahgungor/personal-resume-api/internal/controller"
+	"github.com/aabdullahgungor/personal-resume-api/internal/middleware"
 	"github.com/aabdullahgungor/personal-resume-api/internal/repository"
 	"github.com/aabdullahgungor/personal-resume-api/internal/service"
 	"github.com/gin-gonic/gin"
@@ -9,7 +10,7 @@ import (
 
 func ConfigRouters(router *gin.Engine) *gin.Engine {
 
-	// Abilitiy 
+	// Abilitiy
 	abilityRepo := repository.NewPostgreSqlAbilityRepository()
 	abilityService := service.NewDefaultAbilityService(abilityRepo)
 	abilityController := controller.NewAbilityController(abilityService)
@@ -23,6 +24,7 @@ func ConfigRouters(router *gin.Engine) *gin.Engine {
 	personalRepo := repository.NewPostgreSqlPersonalRepository()
 	personalService := service.NewDefaultPersonalService(personalRepo)
 	personalController := controller.NewPersonalController(personalService)
+	tokenController := controller.NewTokenController(personalService)
 
 	//University
 	universityRepo := repository.NewPostgreSqlUniversityRepository()
@@ -66,6 +68,13 @@ func ConfigRouters(router *gin.Engine) *gin.Engine {
 			universities.PUT("/", universityController.EditUniversity)
 			universities.DELETE("/:id", universityController.DeleteUniversity)
 		}
+
+		main.POST("/token", tokenController.GenerateToken)
+		secured := main.Group("/secured").Use(middleware.Auth())
+		{
+			secured.GET("/ping", controller.Ping)
+		}
+
 	}
 	return router
 }
