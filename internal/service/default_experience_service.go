@@ -16,11 +16,10 @@ type IExperienceService interface {
 	Delete(id string) error
 }
 
-var ( 
-	ErrExperienceIDIsNotValid       = errors.New("Experience id is not valid")
-	ErrExperienceNotFound           = errors.New("Experience cannot be found")
+var (
+	ErrExperienceIDIsNotValid = errors.New("experience id is not valid")
+	ErrExperienceNotFound     = errors.New("experience cannot be found")
 )
-
 
 type DefaultExperienceService struct {
 	experienceRepo repository.IExperienceRepository
@@ -68,4 +67,3 @@ func (d *DefaultExperienceService) Delete(id string) error {
 
 	return nil
 }
-

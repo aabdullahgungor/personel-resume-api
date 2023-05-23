@@ -16,11 +16,10 @@ type IAbilityService interface {
 	Delete(id string) error
 }
 
-var ( 
-	ErrAbilityIDIsNotValid       = errors.New("Ability id is not valid")
-	ErrAbilityNotFound           = errors.New("Ability cannot be found")
+var (
+	ErrAbilityIDIsNotValid = errors.New("ability id is not valid")
+	ErrAbilityNotFound     = errors.New("ability cannot be found")
 )
-
 
 type DefaultAbilityService struct {
 	abilityRepo repository.IAbilityRepository
@@ -68,4 +67,3 @@ func (d *DefaultAbilityService) Delete(id string) error {
 
 	return nil
 }
-

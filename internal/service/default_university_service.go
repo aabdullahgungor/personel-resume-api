@@ -16,11 +16,10 @@ type IUniversityService interface {
 	Delete(id string) error
 }
 
-var ( 
-	ErrUniversityIDIsNotValid       = errors.New("University id is not valid")
-	ErrUniversityNotFound           = errors.New("University cannot be found")
+var (
+	ErrUniversityIDIsNotValid = errors.New("university id is not valid")
+	ErrUniversityNotFound     = errors.New("university cannot be found")
 )
-
 
 type DefaultUniversityService struct {
 	universityRepo repository.IUniversityRepository
@@ -68,4 +67,3 @@ func (d *DefaultUniversityService) Delete(id string) error {
 
 	return nil
 }
-
