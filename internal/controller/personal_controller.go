@@ -22,7 +22,7 @@ func NewPersonalController(ps service.IPersonalService) *personalController {
 func (ps *personalController) GetAllPersonals(context *gin.Context) {
 	personals, err := ps.service.GetAll()
 	if err != nil {
-		context.IndentedJSON(http.StatusNotFound,gin.H{"error":  err.Error(), })
+		context.IndentedJSON(http.StatusNotFound, gin.H{"error": err.Error()})
 		return
 	}
 	context.Header("Content-Type", "application/json")
@@ -32,27 +32,33 @@ func (ps *personalController) GetPersonalById(context *gin.Context) {
 	str_id := context.Param("id")
 	personal, err := ps.service.GetById(str_id)
 	if err != nil {
-	 	if errors.Is(err, service.ErrPersonalIDIsNotValid) {
-	 		context.IndentedJSON(http.StatusNotFound, gin.H{"error": err.Error()})
-	 		return
-	 	} else if  errors.Is(err, service.ErrPersonalNotFound) {
-	 		context.IndentedJSON(http.StatusNotFound, gin.H{"error": err.Error()})
-	 		return
-	 	}
-	 	context.IndentedJSON(http.StatusBadRequest, gin.H{"error":err.Error()})
-	 	return
-	} 
+		if errors.Is(err, service.ErrPersonalIDIsNotValid) {
+			context.IndentedJSON(http.StatusNotFound, gin.H{"error": err.Error()})
+			return
+		} else if errors.Is(err, service.ErrPersonalNotFound) {
+			context.IndentedJSON(http.StatusNotFound, gin.H{"error": err.Error()})
+			return
+		}
+		context.IndentedJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
 	context.Header("Content-Type", "application/json")
 	context.IndentedJSON(http.StatusOK, personal)
 }
 func (ps *personalController) CreatePersonal(context *gin.Context) {
 	var personal model.Personal
-	err := context.ShouldBindJSON(&personal)
 
+	err := context.ShouldBindJSON(&personal)
 	if err != nil {
 		context.IndentedJSON(400, gin.H{
 			"error": "cannot bind JSON: " + err.Error(),
 		})
+		context.Abort()
+		return
+	}
+	if err := personal.HashPassword(personal.Password); err != nil {
+		context.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		context.Abort()
 		return
 	}
 
@@ -64,7 +70,7 @@ func (ps *personalController) CreatePersonal(context *gin.Context) {
 		})
 		return
 	}
-	context.IndentedJSON(http.StatusCreated, gin.H{"message":"Personal has been created"})
+	context.IndentedJSON(http.StatusCreated, gin.H{"message": "Personal has been created"})
 }
 func (ps *personalController) EditPersonal(context *gin.Context) {
 	var personal model.Personal
@@ -86,7 +92,7 @@ func (ps *personalController) EditPersonal(context *gin.Context) {
 		return
 	}
 
-	context.IndentedJSON(http.StatusCreated, gin.H{"message":"Personal has been edited","personal_id": personal.ID})
+	context.IndentedJSON(http.StatusCreated, gin.H{"message": "Personal has been edited", "personal_id": personal.ID})
 }
 func (ps *personalController) DeletePersonal(context *gin.Context) {
 	str_id := context.Param("id")
@@ -95,13 +101,13 @@ func (ps *personalController) DeletePersonal(context *gin.Context) {
 		if errors.Is(err, service.ErrPersonalIDIsNotValid) {
 			context.IndentedJSON(http.StatusNotFound, gin.H{"error": err.Error()})
 			return
-		} else if  errors.Is(err, service.ErrPersonalNotFound) {
+		} else if errors.Is(err, service.ErrPersonalNotFound) {
 			context.IndentedJSON(http.StatusNotFound, gin.H{"error": err.Error()})
 			return
 		}
-		context.IndentedJSON(http.StatusBadRequest, gin.H{"error":err.Error()})
+		context.IndentedJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	context.IndentedJSON(http.StatusAccepted, gin.H{"message":"Personal has been deleted","personal_id": str_id})	
+	context.IndentedJSON(http.StatusAccepted, gin.H{"message": "Personal has been deleted", "personal_id": str_id})
 }
