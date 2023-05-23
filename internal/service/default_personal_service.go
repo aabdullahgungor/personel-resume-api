@@ -2,6 +2,7 @@ package service
 
 import (
 	"errors"
+	"fmt"
 	"strconv"
 
 	"github.com/aabdullahgungor/personal-resume-api/internal/model"
@@ -56,6 +57,7 @@ func (d *DefaultPersonalService) GetByEmail(email string) (model.Personal, error
 	personal, err := d.personalRepo.GetPersonalByEmail(email)
 
 	if err != nil {
+		fmt.Println("Service - Personal Not Found")
 		return model.Personal{}, err
 	}
 

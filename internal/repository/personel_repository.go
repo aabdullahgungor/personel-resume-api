@@ -2,6 +2,7 @@ package repository
 
 import (
 	"errors"
+	"fmt"
 	"log"
 	"strconv"
 
@@ -61,6 +62,7 @@ func (p *PostgreSqlPersonalRepository) GetPersonalByEmail(email string) (model.P
 	var personal model.Personal
 	result := p.connectionPool.Preload("Abilities").Preload("Universities").First(&personal, email)
 	if result.Error != nil {
+		fmt.Println("Repository - Personal Not Found")
 		return model.Personal{}, ErrPersonalNotFound
 	}
 
