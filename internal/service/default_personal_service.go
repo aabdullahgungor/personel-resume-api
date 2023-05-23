@@ -11,16 +11,17 @@ import (
 type IPersonalService interface {
 	GetAll() ([]model.Personal, error)
 	GetById(id string) (model.Personal, error)
+	GetByEmail(email string) (model.Personal, error)
 	Create(personal *model.Personal) error
 	Edit(personal *model.Personal) error
 	Delete(id string) error
 }
 
 var (
-	ErrPersonalIDIsNotValid       = errors.New("Personal id is not valid")
-	ErrPersonalUserNameIsNotEmpty = errors.New("Personal username cannot be empty")
-	ErrPersonalNotFound           = errors.New("Personal cannot be found")
-	ErrPersonalEmailIsNotEmpty = errors.New("Personal email cannot be empty")
+	ErrPersonalIDIsNotValid       = errors.New("personal id is not valid")
+	ErrPersonalUserNameIsNotEmpty = errors.New("personal username cannot be empty")
+	ErrPersonalNotFound           = errors.New("personal cannot be found")
+	ErrPersonalEmailIsNotEmpty    = errors.New("personal email cannot be empty")
 )
 
 type DefaultPersonalService struct {
@@ -50,6 +51,16 @@ func (d *DefaultPersonalService) GetById(id string) (model.Personal, error) {
 
 	return personal, nil
 }
+func (d *DefaultPersonalService) GetByEmail(email string) (model.Personal, error) {
+
+	personal, err := d.personalRepo.GetPersonalByEmail(email)
+
+	if err != nil {
+		return model.Personal{}, err
+	}
+
+	return personal, nil
+}
 func (d *DefaultPersonalService) Create(personal *model.Personal) error {
 	return d.personalRepo.CreatePersonal(personal)
 }
@@ -69,4 +80,3 @@ func (d *DefaultPersonalService) Delete(id string) error {
 
 	return nil
 }
-
