@@ -10,15 +10,6 @@ import (
 	"gorm.io/gorm"
 )
 
-type IUniversityRepository interface {
-	GetAllUniversities() ([]model.University, error)
-	GetUniversityById(id int) (model.University, error)
-	CreateUniversity(university *model.University) error
-	EditUniversity(university *model.University) error
-	DeleteUniversity(id int) error
-}
-
-
 var (
 	ErrUniversityNotFound = errors.New("FromRepository - university not found")
 )
@@ -36,13 +27,12 @@ func NewPostgreSqlUniversityRepository() *PostgreSqlUniversityRepository {
 	}
 }
 
-
-func (p *PostgreSqlUniversityRepository) GetAllUniversities() ([]model.University, error){
+func (p *PostgreSqlUniversityRepository) GetAllUniversities() ([]model.University, error) {
 
 	var universities []model.University
 	result := p.connectionPool.Find(&universities)
 	if result.Error != nil {
-        return []model.University{}, ErrUniversityNotFound
+		return []model.University{}, ErrUniversityNotFound
 	}
 
 	return universities, nil
@@ -62,7 +52,7 @@ func (p *PostgreSqlUniversityRepository) CreateUniversity(university *model.Univ
 	err := p.connectionPool.Create(&university).Error
 
 	if err != nil {
-        panic(err)
+		panic(err)
 	}
 
 	log.Printf("\ndisplay the ids of the newly inserted objects: %v", university.ID)
@@ -74,7 +64,7 @@ func (p *PostgreSqlUniversityRepository) EditUniversity(university *model.Univer
 	err := p.connectionPool.Save(&university).Error
 
 	if err != nil {
-        panic(err)
+		panic(err)
 	}
 
 	log.Printf("\ndisplay the ids of the edited objects: %v", university.ID)
@@ -86,10 +76,10 @@ func (p *PostgreSqlUniversityRepository) DeleteUniversity(id int) error {
 	err := p.connectionPool.Delete(&model.University{}, id).Error
 
 	if err != nil {
-        panic(err)
+		panic(err)
 	}
 
-	log.Println("deleting the first result from the search filter\n"+ "The id of the deleted document:"+strconv.Itoa(id))
+	log.Println("deleting the first result from the search filter\n" + "The id of the deleted document:" + strconv.Itoa(id))
 
 	return err
 }
