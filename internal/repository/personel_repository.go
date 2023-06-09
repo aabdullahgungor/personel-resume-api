@@ -11,15 +11,6 @@ import (
 	"gorm.io/gorm"
 )
 
-type IPersonalRepository interface {
-	GetAllPersonals() ([]model.Personal, error)
-	GetPersonalById(id int) (model.Personal, error)
-	GetPersonalByEmail(email string) (model.Personal, error)
-	CreatePersonal(personal *model.Personal) error
-	EditPersonal(personal *model.Personal) error
-	DeletePersonal(id int) error
-}
-
 var (
 	ErrPersonalNotFound = errors.New("FromRepository - personal not found")
 )
