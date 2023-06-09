@@ -5,7 +5,7 @@ import (
 	"strconv"
 
 	"github.com/aabdullahgungor/personal-resume-api/internal/model"
-	"github.com/aabdullahgungor/personal-resume-api/internal/repository"
+	"github.com/aabdullahgungor/personal-resume-api/internal/repository/interfaces"
 )
 
 type IUniversityService interface {
@@ -22,10 +22,10 @@ var (
 )
 
 type DefaultUniversityService struct {
-	universityRepo repository.IUniversityRepository
+	universityRepo interfaces.IUniversityRepository
 }
 
-func NewDefaultUniversityService(uRepo repository.IUniversityRepository) *DefaultUniversityService {
+func NewDefaultUniversityService(uRepo interfaces.IUniversityRepository) *DefaultUniversityService {
 	return &DefaultUniversityService{
 		universityRepo: uRepo,
 	}
