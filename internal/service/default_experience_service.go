@@ -5,7 +5,7 @@ import (
 	"strconv"
 
 	"github.com/aabdullahgungor/personal-resume-api/internal/model"
-	"github.com/aabdullahgungor/personal-resume-api/internal/repository"
+	"github.com/aabdullahgungor/personal-resume-api/internal/repository/interfaces"
 )
 
 type IExperienceService interface {
@@ -22,10 +22,10 @@ var (
 )
 
 type DefaultExperienceService struct {
-	experienceRepo repository.IExperienceRepository
+	experienceRepo interfaces.IExperienceRepository
 }
 
-func NewDefaultExperienceService(eRepo repository.IExperienceRepository) *DefaultExperienceService {
+func NewDefaultExperienceService(eRepo interfaces.IExperienceRepository) *DefaultExperienceService {
 	return &DefaultExperienceService{
 		experienceRepo: eRepo,
 	}
