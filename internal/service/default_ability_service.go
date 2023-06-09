@@ -5,7 +5,7 @@ import (
 	"strconv"
 
 	"github.com/aabdullahgungor/personal-resume-api/internal/model"
-	"github.com/aabdullahgungor/personal-resume-api/internal/repository"
+	"github.com/aabdullahgungor/personal-resume-api/internal/repository/interfaces"
 )
 
 type IAbilityService interface {
@@ -22,10 +22,10 @@ var (
 )
 
 type DefaultAbilityService struct {
-	abilityRepo repository.IAbilityRepository
+	abilityRepo interfaces.IAbilityRepository
 }
 
-func NewDefaultAbilityService(aRepo repository.IAbilityRepository) *DefaultAbilityService {
+func NewDefaultAbilityService(aRepo interfaces.IAbilityRepository) *DefaultAbilityService {
 	return &DefaultAbilityService{
 		abilityRepo: aRepo,
 	}
