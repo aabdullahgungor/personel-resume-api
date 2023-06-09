@@ -6,7 +6,7 @@ import (
 	"strconv"
 
 	"github.com/aabdullahgungor/personal-resume-api/internal/model"
-	"github.com/aabdullahgungor/personal-resume-api/internal/repository"
+	"github.com/aabdullahgungor/personal-resume-api/internal/repository/interfaces"
 )
 
 type IPersonalService interface {
@@ -26,10 +26,10 @@ var (
 )
 
 type DefaultPersonalService struct {
-	personalRepo repository.IPersonalRepository
+	personalRepo interfaces.IPersonalRepository
 }
 
-func NewDefaultPersonalService(pRepo repository.IPersonalRepository) *DefaultPersonalService {
+func NewDefaultPersonalService(pRepo interfaces.IPersonalRepository) *DefaultPersonalService {
 	return &DefaultPersonalService{
 		personalRepo: pRepo,
 	}
