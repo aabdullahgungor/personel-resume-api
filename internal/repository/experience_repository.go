@@ -10,14 +10,6 @@ import (
 	"gorm.io/gorm"
 )
 
-type IExperienceRepository interface {
-	GetAllExperiences() ([]model.Experience, error)
-	GetExperienceById(id int) (model.Experience, error)
-	CreateExperience(experience *model.Experience) error
-	EditExperience(experience *model.Experience) error
-	DeleteExperience(id int) error
-}
-
 var (
 	ErrExperienceNotFound = errors.New("FromRepository - experience  not found")
 )
@@ -34,12 +26,12 @@ func NewPostgreSqlExperienceRepository() *PostgreSqlExperienceRepository {
 		connectionPool: db,
 	}
 }
-func (p *PostgreSqlExperienceRepository) GetAllExperiences() ([]model.Experience, error){
+func (p *PostgreSqlExperienceRepository) GetAllExperiences() ([]model.Experience, error) {
 
 	var experiences []model.Experience
 	result := p.connectionPool.Preload("Personal").Find(&experiences)
 	if result.Error != nil {
-        return []model.Experience{}, ErrExperienceNotFound
+		return []model.Experience{}, ErrExperienceNotFound
 	}
 
 	return experiences, nil
@@ -59,7 +51,7 @@ func (p *PostgreSqlExperienceRepository) CreateExperience(experience *model.Expe
 	err := p.connectionPool.Create(&experience).Error
 
 	if err != nil {
-        panic(err)
+		panic(err)
 	}
 
 	log.Printf("\ndisplay the ids of the newly inserted objects: %v", experience.ID)
@@ -71,7 +63,7 @@ func (p *PostgreSqlExperienceRepository) EditExperience(experience *model.Experi
 	err := p.connectionPool.Save(&experience).Error
 
 	if err != nil {
-        panic(err)
+		panic(err)
 	}
 
 	log.Printf("\ndisplay the ids of the edited objects: %v", experience.ID)
@@ -83,10 +75,10 @@ func (p *PostgreSqlExperienceRepository) DeleteExperience(id int) error {
 	err := p.connectionPool.Delete(&model.Experience{}, id).Error
 
 	if err != nil {
-        panic(err)
+		panic(err)
 	}
 
-	log.Println("deleting the first result from the search filter\n"+ "The id of the deleted document:"+strconv.Itoa(id))
+	log.Println("deleting the first result from the search filter\n" + "The id of the deleted document:" + strconv.Itoa(id))
 
 	return err
 }
