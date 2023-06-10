@@ -1,4 +1,4 @@
-package test_repository
+package test_service
 
 import (
 	"testing"
