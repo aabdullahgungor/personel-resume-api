@@ -55,7 +55,7 @@ func TestDefaultExperienceService_GetById(t *testing.T) {
 	experienceService := service.NewDefaultExperienceService(mockRepository)
 	_, err := experienceService.GetById(id)
 
-	assert.ErrorIs(t, err, repository.ErrAbilityNotFound)
+	assert.ErrorIs(t, err, repository.ErrExperienceNotFound)
 }
 
 func TestDefaultExperienceService_Create(t *testing.T) {
