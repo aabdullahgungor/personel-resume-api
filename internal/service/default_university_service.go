@@ -8,14 +8,6 @@ import (
 	"github.com/aabdullahgungor/personal-resume-api/internal/repository/interfaces"
 )
 
-type IUniversityService interface {
-	GetAll() ([]model.University, error)
-	GetById(id string) (model.University, error)
-	Create(university *model.University) error
-	Edit(university *model.University) error
-	Delete(id string) error
-}
-
 var (
 	ErrUniversityIDIsNotValid = errors.New("university id is not valid")
 	ErrUniversityNotFound     = errors.New("university cannot be found")
