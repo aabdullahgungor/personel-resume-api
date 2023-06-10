@@ -5,15 +5,15 @@ import (
 
 	"github.com/aabdullahgungor/personal-resume-api/internal/auth"
 	"github.com/aabdullahgungor/personal-resume-api/internal/model"
-	"github.com/aabdullahgungor/personal-resume-api/internal/service"
+	"github.com/aabdullahgungor/personal-resume-api/internal/service/interfaces"
 	"github.com/gin-gonic/gin"
 )
 
 type tokenController struct {
-	service service.IPersonalService
+	service interfaces.IPersonalService
 }
 
-func NewTokenController(ts service.IPersonalService) *tokenController {
+func NewTokenController(ts interfaces.IPersonalService) *tokenController {
 	return &tokenController{
 		service: ts,
 	}

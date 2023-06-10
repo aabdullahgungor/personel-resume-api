@@ -6,14 +6,15 @@ import (
 
 	"github.com/aabdullahgungor/personal-resume-api/internal/model"
 	"github.com/aabdullahgungor/personal-resume-api/internal/service"
+	"github.com/aabdullahgungor/personal-resume-api/internal/service/interfaces"
 	"github.com/gin-gonic/gin"
 )
 
 type personalController struct {
-	service service.IPersonalService
+	service interfaces.IPersonalService
 }
 
-func NewPersonalController(ps service.IPersonalService) *personalController {
+func NewPersonalController(ps interfaces.IPersonalService) *personalController {
 	return &personalController{
 		service: ps,
 	}

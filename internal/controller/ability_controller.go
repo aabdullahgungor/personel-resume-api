@@ -6,14 +6,15 @@ import (
 
 	"github.com/aabdullahgungor/personal-resume-api/internal/model"
 	"github.com/aabdullahgungor/personal-resume-api/internal/service"
+	"github.com/aabdullahgungor/personal-resume-api/internal/service/interfaces"
 	"github.com/gin-gonic/gin"
 )
 
 type abilityController struct {
-	service service.IAbilityService
+	service interfaces.IAbilityService
 }
 
-func NewAbilityController(as service.IAbilityService) *abilityController {
+func NewAbilityController(as interfaces.IAbilityService) *abilityController {
 	return &abilityController{
 		service: as,
 	}
@@ -22,7 +23,7 @@ func NewAbilityController(as service.IAbilityService) *abilityController {
 func (as *abilityController) GetAllAbilities(context *gin.Context) {
 	abilities, err := as.service.GetAll()
 	if err != nil {
-		context.IndentedJSON(http.StatusNotFound,gin.H{"error": err.Error()})
+		context.IndentedJSON(http.StatusNotFound, gin.H{"error": err.Error()})
 		return
 	}
 	context.Header("Content-Type", "application/json")
@@ -32,16 +33,16 @@ func (as *abilityController) GetAbilityById(context *gin.Context) {
 	str_id := context.Param("id")
 	ability, err := as.service.GetById(str_id)
 	if err != nil {
-	 	if errors.Is(err, service.ErrAbilityIDIsNotValid) {
-	 		context.IndentedJSON(http.StatusNotFound, gin.H{"error": err.Error()})
-	 		return
-	 	} else if  errors.Is(err, service.ErrAbilityNotFound) {
-	 		context.IndentedJSON(http.StatusNotFound, gin.H{"error": err.Error()})
-	 		return
-	 	}
-	 	context.IndentedJSON(http.StatusBadRequest, gin.H{"error":err.Error()})
-	 	return
-	} 
+		if errors.Is(err, service.ErrAbilityIDIsNotValid) {
+			context.IndentedJSON(http.StatusNotFound, gin.H{"error": err.Error()})
+			return
+		} else if errors.Is(err, service.ErrAbilityNotFound) {
+			context.IndentedJSON(http.StatusNotFound, gin.H{"error": err.Error()})
+			return
+		}
+		context.IndentedJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
 	context.Header("Content-Type", "application/json")
 	context.IndentedJSON(http.StatusOK, ability)
 }
@@ -64,7 +65,7 @@ func (as *abilityController) CreateAbility(context *gin.Context) {
 		})
 		return
 	}
-	context.IndentedJSON(http.StatusCreated, gin.H{"message":"Ability has been created"})
+	context.IndentedJSON(http.StatusCreated, gin.H{"message": "Ability has been created"})
 }
 func (as *abilityController) EditAbility(context *gin.Context) {
 	var ability model.Ability
@@ -86,7 +87,7 @@ func (as *abilityController) EditAbility(context *gin.Context) {
 		return
 	}
 
-	context.IndentedJSON(http.StatusCreated, gin.H{"message":"Ability has been edited","ability_id": ability.ID})
+	context.IndentedJSON(http.StatusCreated, gin.H{"message": "Ability has been edited", "ability_id": ability.ID})
 }
 func (as *abilityController) DeleteAbility(context *gin.Context) {
 	str_id := context.Param("id")
@@ -95,13 +96,13 @@ func (as *abilityController) DeleteAbility(context *gin.Context) {
 		if errors.Is(err, service.ErrAbilityIDIsNotValid) {
 			context.IndentedJSON(http.StatusNotFound, gin.H{"error": err.Error()})
 			return
-		} else if  errors.Is(err, service.ErrAbilityNotFound) {
+		} else if errors.Is(err, service.ErrAbilityNotFound) {
 			context.IndentedJSON(http.StatusNotFound, gin.H{"error": err.Error()})
 			return
 		}
-		context.IndentedJSON(http.StatusBadRequest, gin.H{"error":err.Error()})
+		context.IndentedJSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	context.IndentedJSON(http.StatusAccepted, gin.H{"message":"Ability has been deleted","ability_id": str_id})	
+	context.IndentedJSON(http.StatusAccepted, gin.H{"message": "Ability has been deleted", "ability_id": str_id})
 }
