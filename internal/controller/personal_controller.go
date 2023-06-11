@@ -20,6 +20,13 @@ func NewPersonalController(ps interfaces.IPersonalService) *personalController {
 	}
 }
 
+// GetPersonals           godoc
+// @Summary		Get personals array
+// @Description	Responds with the list of all personals as JSON.
+// @Tags			personals
+// @Produce		json
+// @Success		200	{object}	model.Personal
+// @Router			/personals [get]
 func (ps *personalController) GetAllPersonals(context *gin.Context) {
 	personals, err := ps.service.GetAll()
 	if err != nil {
@@ -29,6 +36,17 @@ func (ps *personalController) GetAllPersonals(context *gin.Context) {
 	context.Header("Content-Type", "application/json")
 	context.IndentedJSON(http.StatusOK, personals)
 }
+
+// GetPersonal          godoc
+// @Summary		Get single personal by id
+// @Description	Returns the personal whose id value matches the id.
+// @Tags			personals
+// @Produce		json
+// @Param			id path	string true "search personal by id"
+// @Success		200		{object}	model.Personal
+// @Failure 	400     error message
+// @Failure 	406     error message
+// @Router			/personals/{id} [get]
 func (ps *personalController) GetPersonalById(context *gin.Context) {
 	str_id := context.Param("id")
 	personal, err := ps.service.GetById(str_id)
@@ -46,6 +64,17 @@ func (ps *personalController) GetPersonalById(context *gin.Context) {
 	context.Header("Content-Type", "application/json")
 	context.IndentedJSON(http.StatusOK, personal)
 }
+
+// CreatePersonal           godoc
+// @Summary		Add a new personal
+// @Description	Takes a personal JSON and store in DB. Return saved JSON.
+// @Tags			personals
+// @Produce		json
+// @Param			personal body	model.Personal	true "Personal JSON"
+// @Success		200		{object}	model.Personal
+// @Failure 	400     error message
+// @Failure 	406     error message
+// @Router			/personals [post]
 func (ps *personalController) CreatePersonal(context *gin.Context) {
 	var personal model.Personal
 
@@ -73,6 +102,17 @@ func (ps *personalController) CreatePersonal(context *gin.Context) {
 	}
 	context.IndentedJSON(http.StatusCreated, gin.H{"message": "Personal has been created"})
 }
+
+// EditPersonal           godoc
+// @Summary		Edit an personal
+// @Description	Takes a personal JSON and edit an in DB. Return saved JSON.
+// @Tags			personals
+// @Produce		json
+// @Param			personal body	model.Personal	true "Personal JSON"
+// @Success		200		{object}	model.Personal
+// @Failure 	400     error message
+// @Failure 	406     error message
+// @Router			/personals [put]
 func (ps *personalController) EditPersonal(context *gin.Context) {
 	var personal model.Personal
 	err := context.ShouldBindJSON(&personal)
@@ -95,6 +135,17 @@ func (ps *personalController) EditPersonal(context *gin.Context) {
 
 	context.IndentedJSON(http.StatusCreated, gin.H{"message": "Personal has been edited", "personal_id": personal.ID})
 }
+
+// DeletePersonal         godoc
+// @Summary		Delete an personal
+// @Description	Remove an personal from DB by id.
+// @Tags			personals
+// @Produce		json
+// @Param			id path	string true "delete personal by id"
+// @Success		200		{object}	model.Personal
+// @Failure 	400     error message
+// @Failure 	406     error message
+// @Router			/personals/{id} [delete]
 func (ps *personalController) DeletePersonal(context *gin.Context) {
 	str_id := context.Param("id")
 	err := ps.service.Delete(str_id)

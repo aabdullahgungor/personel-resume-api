@@ -310,4 +310,124 @@ paths:
       summary: Get single experience by id
       tags:
       - experiences
+  /personals:
+    get:
+      description: Responds with the list of all personals as JSON.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Personal'
+      summary: Get personals array
+      tags:
+      - personals
+    post:
+      description: Takes a personal JSON and store in DB. Return saved JSON.
+      parameters:
+      - description: Personal JSON
+        in: body
+        name: personal
+        required: true
+        schema:
+          $ref: '#/definitions/model.Personal'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Personal'
+        "400":
+          description: Bad Request
+          schema:
+            type: error
+        "406":
+          description: Not Acceptable
+          schema:
+            type: error
+      summary: Add a new personal
+      tags:
+      - personals
+    put:
+      description: Takes a personal JSON and edit an in DB. Return saved JSON.
+      parameters:
+      - description: Personal JSON
+        in: body
+        name: personal
+        required: true
+        schema:
+          $ref: '#/definitions/model.Personal'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Personal'
+        "400":
+          description: Bad Request
+          schema:
+            type: error
+        "406":
+          description: Not Acceptable
+          schema:
+            type: error
+      summary: Edit an personal
+      tags:
+      - personals
+  /personals/{id}:
+    delete:
+      description: Remove an personal from DB by id.
+      parameters:
+      - description: delete personal by id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Personal'
+        "400":
+          description: Bad Request
+          schema:
+            type: error
+        "406":
+          description: Not Acceptable
+          schema:
+            type: error
+      summary: Delete an personal
+      tags:
+      - personals
+    get:
+      description: Returns the personal whose id value matches the id.
+      parameters:
+      - description: search personal by id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Personal'
+        "400":
+          description: Bad Request
+          schema:
+            type: error
+        "406":
+          description: Not Acceptable
+          schema:
+            type: error
+      summary: Get single personal by id
+      tags:
+      - personals
 swagger: "2.0"

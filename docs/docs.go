@@ -379,6 +379,188 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/personals": {
+            "get": {
+                "description": "Responds with the list of all personals as JSON.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "personals"
+                ],
+                "summary": "Get personals array",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.Personal"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "Takes a personal JSON and edit an in DB. Return saved JSON.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "personals"
+                ],
+                "summary": "Edit an personal",
+                "parameters": [
+                    {
+                        "description": "Personal JSON",
+                        "name": "personal",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.Personal"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.Personal"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "error"
+                        }
+                    },
+                    "406": {
+                        "description": "Not Acceptable",
+                        "schema": {
+                            "type": "error"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Takes a personal JSON and store in DB. Return saved JSON.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "personals"
+                ],
+                "summary": "Add a new personal",
+                "parameters": [
+                    {
+                        "description": "Personal JSON",
+                        "name": "personal",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.Personal"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.Personal"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "error"
+                        }
+                    },
+                    "406": {
+                        "description": "Not Acceptable",
+                        "schema": {
+                            "type": "error"
+                        }
+                    }
+                }
+            }
+        },
+        "/personals/{id}": {
+            "get": {
+                "description": "Returns the personal whose id value matches the id.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "personals"
+                ],
+                "summary": "Get single personal by id",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "search personal by id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.Personal"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "error"
+                        }
+                    },
+                    "406": {
+                        "description": "Not Acceptable",
+                        "schema": {
+                            "type": "error"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Remove an personal from DB by id.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "personals"
+                ],
+                "summary": "Delete an personal",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "delete personal by id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/model.Personal"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "type": "error"
+                        }
+                    },
+                    "406": {
+                        "description": "Not Acceptable",
+                        "schema": {
+                            "type": "error"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
