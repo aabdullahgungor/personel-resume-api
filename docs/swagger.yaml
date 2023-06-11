@@ -430,4 +430,124 @@ paths:
       summary: Get single personal by id
       tags:
       - personals
+  /universities:
+    get:
+      description: Responds with the list of all universities as JSON.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.University'
+      summary: Get universities array
+      tags:
+      - universities
+    post:
+      description: Takes a university  JSON and store in DB. Return saved JSON.
+      parameters:
+      - description: Ability JSON
+        in: body
+        name: university
+        required: true
+        schema:
+          $ref: '#/definitions/model.University'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.University'
+        "400":
+          description: Bad Request
+          schema:
+            type: error
+        "406":
+          description: Not Acceptable
+          schema:
+            type: error
+      summary: Add a new university
+      tags:
+      - universities
+    put:
+      description: Takes a university JSON and edit an in DB. Return saved JSON.
+      parameters:
+      - description: University JSON
+        in: body
+        name: university
+        required: true
+        schema:
+          $ref: '#/definitions/model.University'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.University'
+        "400":
+          description: Bad Request
+          schema:
+            type: error
+        "406":
+          description: Not Acceptable
+          schema:
+            type: error
+      summary: Edit an university
+      tags:
+      - universities
+  /universities/{id}:
+    delete:
+      description: Remove an university from DB by id.
+      parameters:
+      - description: delete university by id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.University'
+        "400":
+          description: Bad Request
+          schema:
+            type: error
+        "406":
+          description: Not Acceptable
+          schema:
+            type: error
+      summary: Delete an university
+      tags:
+      - universities
+    get:
+      description: Returns the university  whose id value matches the id.
+      parameters:
+      - description: search university  by id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.University'
+        "400":
+          description: Bad Request
+          schema:
+            type: error
+        "406":
+          description: Not Acceptable
+          schema:
+            type: error
+      summary: Get single university  by id
+      tags:
+      - universities
 swagger: "2.0"
