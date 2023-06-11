@@ -1,4 +1,313 @@
+definitions:
+  model.Ability:
+    properties:
+      ability:
+        type: string
+      id:
+        type: integer
+      personals:
+        items:
+          $ref: '#/definitions/model.Personal'
+        type: array
+    type: object
+  model.Experience:
+    properties:
+      company-name:
+        type: string
+      finishyear:
+        type: string
+      id:
+        type: integer
+      personal:
+        $ref: '#/definitions/model.Personal'
+      personal_id:
+        type: integer
+      position:
+        type: string
+      startyear:
+        type: string
+    type: object
+  model.Personal:
+    properties:
+      abilities:
+        items:
+          $ref: '#/definitions/model.Ability'
+        type: array
+      email:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      password:
+        type: string
+      surname:
+        type: string
+      universities:
+        items:
+          $ref: '#/definitions/model.University'
+        type: array
+      username:
+        type: string
+      usertype:
+        type: string
+      work_experiences:
+        items:
+          $ref: '#/definitions/model.Experience'
+        type: array
+    type: object
+  model.University:
+    properties:
+      id:
+        type: integer
+      personals:
+        items:
+          $ref: '#/definitions/model.Personal'
+        type: array
+      university:
+        type: string
+    type: object
 info:
   contact: {}
-paths: {}
+paths:
+  /abilities:
+    get:
+      description: Responds with the list of all abilities as JSON.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Ability'
+      summary: Get abilities array
+      tags:
+      - abilities
+    post:
+      description: Takes a ability JSON and store in DB. Return saved JSON.
+      parameters:
+      - description: Ability JSON
+        in: body
+        name: ability
+        required: true
+        schema:
+          $ref: '#/definitions/model.Ability'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Ability'
+        "400":
+          description: Bad Request
+          schema:
+            type: error
+        "406":
+          description: Not Acceptable
+          schema:
+            type: error
+      summary: Add a new ability
+      tags:
+      - abilities
+    put:
+      description: Takes a ability JSON and edit an in DB. Return saved JSON.
+      parameters:
+      - description: Ability JSON
+        in: body
+        name: ability
+        required: true
+        schema:
+          $ref: '#/definitions/model.Ability'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Ability'
+        "400":
+          description: Bad Request
+          schema:
+            type: error
+        "406":
+          description: Not Acceptable
+          schema:
+            type: error
+      summary: Edit an ability
+      tags:
+      - abilities
+  /abilities/{id}:
+    delete:
+      description: Remove an ability from DB by id.
+      parameters:
+      - description: delete ability by id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Ability'
+        "400":
+          description: Bad Request
+          schema:
+            type: error
+        "406":
+          description: Not Acceptable
+          schema:
+            type: error
+      summary: Delete an ability
+      tags:
+      - abilities
+    get:
+      description: Returns the ability whose id value matches the id.
+      parameters:
+      - description: search ability by id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Ability'
+        "400":
+          description: Bad Request
+          schema:
+            type: error
+        "406":
+          description: Not Acceptable
+          schema:
+            type: error
+      summary: Get single ability by id
+      tags:
+      - abilities
+  /experiences:
+    get:
+      description: Responds with the list of all experiences   as JSON.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Experience'
+      summary: Get experiences   array
+      tags:
+      - experiences
+    post:
+      description: Takes a experience  JSON and store in DB. Return saved JSON.
+      parameters:
+      - description: Experience  JSON
+        in: body
+        name: experience
+        required: true
+        schema:
+          $ref: '#/definitions/model.Experience'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Experience'
+        "400":
+          description: Bad Request
+          schema:
+            type: error
+        "406":
+          description: Not Acceptable
+          schema:
+            type: error
+      summary: Add a new experience
+      tags:
+      - experiences
+    put:
+      description: Takes a experience  JSON and edit an in DB. Return saved JSON.
+      parameters:
+      - description: Experience  JSON
+        in: body
+        name: experience
+        required: true
+        schema:
+          $ref: '#/definitions/model.Experience'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Experience'
+        "400":
+          description: Bad Request
+          schema:
+            type: error
+        "406":
+          description: Not Acceptable
+          schema:
+            type: error
+      summary: Edit an experience
+      tags:
+      - experiences
+  /experiences/{id}:
+    delete:
+      description: Remove an experience  from DB by id.
+      parameters:
+      - description: delete experience  by id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Experience'
+        "400":
+          description: Bad Request
+          schema:
+            type: error
+        "406":
+          description: Not Acceptable
+          schema:
+            type: error
+      summary: Delete an experience
+      tags:
+      - experiences
+    get:
+      description: Returns the experience whose id value matches the id.
+      parameters:
+      - description: search experience by id
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Experience'
+        "400":
+          description: Bad Request
+          schema:
+            type: error
+        "406":
+          description: Not Acceptable
+          schema:
+            type: error
+      summary: Get single experience by id
+      tags:
+      - experiences
 swagger: "2.0"
