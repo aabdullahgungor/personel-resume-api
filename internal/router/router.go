@@ -1,11 +1,14 @@
 package router
 
 import (
+	"github.com/aabdullahgungor/personal-resume-api/docs"
 	"github.com/aabdullahgungor/personal-resume-api/internal/controller"
 	"github.com/aabdullahgungor/personal-resume-api/internal/middleware"
 	"github.com/aabdullahgungor/personal-resume-api/internal/repository"
 	"github.com/aabdullahgungor/personal-resume-api/internal/service"
 	"github.com/gin-gonic/gin"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
 func ConfigRouters(router *gin.Engine) *gin.Engine {
@@ -74,6 +77,16 @@ func ConfigRouters(router *gin.Engine) *gin.Engine {
 		{
 			secured.GET("/ping", controller.Ping)
 		}
+
+		// programmatically set swagger info
+		docs.SwaggerInfo.Title = "Swagger Example API"
+		docs.SwaggerInfo.Description = "This is a sample server Personal-Resume-Api server."
+		docs.SwaggerInfo.Version = "1.0"
+		docs.SwaggerInfo.Host = ""
+		docs.SwaggerInfo.BasePath = "/api/v1"
+		docs.SwaggerInfo.Schemes = []string{"http", "https"}
+		// add swagger
+		main.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	}
 	return router
