@@ -47,10 +47,10 @@ func TestAbilityController_GetAllAbilities(t *testing.T) {
 		w := httptest.NewRecorder()
 		gin.SetMode(gin.ReleaseMode)
 		ctx, r := gin.CreateTestContext(w)
-		productTestController := controller.NewAbilityController(mockService)
-		productTestController.GetAllAbilities(ctx)
+		abilityTestController := controller.NewAbilityController(mockService)
+		abilityTestController.GetAllAbilities(ctx)
 
-		req, _ := http.NewRequest("GET", "api/v1/products", nil)
+		req, _ := http.NewRequest("GET", "api/v1/abilitys", nil)
 		r.ServeHTTP(w, req)
 		assert.Equal(t, http.StatusOK, w.Code)
 		fmt.Println(w.Code)
@@ -101,7 +101,7 @@ func TestAbilityController_GetAbilityById(t *testing.T) {
 		var responseData model.Ability
 		json.NewDecoder(w.Body).Decode(&responseData)
 		assert.Equal(t, "Go", responseData.AbilityName)
-		t.Log("\nProduct name is: ", responseData.AbilityName)
+		t.Log("\nAbility name is: ", responseData.AbilityName)
 
 	})
 }
