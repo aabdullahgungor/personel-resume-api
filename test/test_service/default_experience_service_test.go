@@ -46,14 +46,15 @@ func TestDefaultExperienceService_GetAll(t *testing.T) {
 }
 
 func TestDefaultExperienceService_GetById(t *testing.T) {
-	id := "1"
+	id_int := 1
 	mockCtrl := gomock.NewController(t)
 	defer mockCtrl.Finish()
 	mockRepository := mocks.NewMockIExperienceRepository(mockCtrl)
-	mockRepository.EXPECT().GetExperienceById(gomock.Eq(id)).Return(model.Experience{}, repository.ErrExperienceNotFound)
+	mockRepository.EXPECT().GetExperienceById(id_int).Return(model.Experience{}, repository.ErrExperienceNotFound)
 
 	experienceService := service.NewDefaultExperienceService(mockRepository)
-	_, err := experienceService.GetById(id)
+	id_str := "1"
+	_, err := experienceService.GetById(id_str)
 
 	assert.ErrorIs(t, err, repository.ErrExperienceNotFound)
 }
@@ -109,14 +110,15 @@ func TestDefaultExperienceService_Edit(t *testing.T) {
 
 func TestDefaultExperienceService_Delete(t *testing.T) {
 
-	id := "1"
+	id_int := 1
 	mockCtrl := gomock.NewController(t)
 	defer mockCtrl.Finish()
 	mockRepository := mocks.NewMockIExperienceRepository(mockCtrl)
-	mockRepository.EXPECT().DeleteExperience(gomock.Eq(id)).Return(nil).Times(1)
+	mockRepository.EXPECT().DeleteExperience(id_int).Return(nil).Times(1)
 
 	experienceService := service.NewDefaultExperienceService(mockRepository)
-	err := experienceService.Delete(id)
+	id_str := "1"
+	err := experienceService.Delete(id_str)
 
 	if assert.Nil(t, err) {
 		t.Log("Success delete Experience")

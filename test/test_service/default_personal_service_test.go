@@ -46,20 +46,19 @@ func TestDefaultPersonalService_GetAll(t *testing.T) {
 		t.Log(err)
 	}
 }
-
 func TestDefaultPersonalService_GetById(t *testing.T) {
-	id := "1"
+	id_int := 1
 	mockCtrl := gomock.NewController(t)
 	defer mockCtrl.Finish()
 	mockRepository := mocks.NewMockIPersonalRepository(mockCtrl)
-	mockRepository.EXPECT().GetPersonalById(gomock.Eq(id)).Return(model.Personal{}, repository.ErrPersonalNotFound)
+	mockRepository.EXPECT().GetPersonalById(id_int).Return(model.Personal{}, repository.ErrPersonalNotFound)
 
 	personalService := service.NewDefaultPersonalService(mockRepository)
-	_, err := personalService.GetById(id)
+	id_str := "1"
+	_, err := personalService.GetById(id_str)
 
 	assert.ErrorIs(t, err, repository.ErrPersonalNotFound)
 }
-
 func TestDefaultPersonalService_Create(t *testing.T) {
 
 	personal := model.Personal{
@@ -85,7 +84,6 @@ func TestDefaultPersonalService_Create(t *testing.T) {
 	}
 
 }
-
 func TestDefaultPersonalService_Edit(t *testing.T) {
 
 	personal := model.Personal{
@@ -110,17 +108,17 @@ func TestDefaultPersonalService_Edit(t *testing.T) {
 		t.Log("Personal cannot update")
 	}
 }
-
 func TestDefaultPersonalService_Delete(t *testing.T) {
 
-	id := "1"
+	id_int := 1
 	mockCtrl := gomock.NewController(t)
 	defer mockCtrl.Finish()
 	mockRepository := mocks.NewMockIPersonalRepository(mockCtrl)
-	mockRepository.EXPECT().DeletePersonal(gomock.Eq(id)).Return(nil).Times(1)
+	mockRepository.EXPECT().DeletePersonal(id_int).Return(nil).Times(1)
 
 	personalService := service.NewDefaultPersonalService(mockRepository)
-	err := personalService.Delete(id)
+	id_str := "1"
+	err := personalService.Delete(id_str)
 
 	if assert.Nil(t, err) {
 		t.Log("Success delete Personal")

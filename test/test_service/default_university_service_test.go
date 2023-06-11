@@ -36,20 +36,19 @@ func TestDefaultUniversityService_GetAll(t *testing.T) {
 		t.Log(err)
 	}
 }
-
 func TestDefaultUniversityService_GetById(t *testing.T) {
-	id := "1"
+	id_int := 1
 	mockCtrl := gomock.NewController(t)
 	defer mockCtrl.Finish()
 	mockRepository := mocks.NewMockIUniversityRepository(mockCtrl)
-	mockRepository.EXPECT().GetUniversityById(gomock.Eq(id)).Return(model.University{}, repository.ErrUniversityNotFound)
+	mockRepository.EXPECT().GetUniversityById(id_int).Return(model.University{}, repository.ErrUniversityNotFound)
 
 	universityService := service.NewDefaultUniversityService(mockRepository)
-	_, err := universityService.GetById(id)
+	id_str := "1"
+	_, err := universityService.GetById(id_str)
 
 	assert.ErrorIs(t, err, repository.ErrUniversityNotFound)
 }
-
 func TestDefaultUniversityService_Create(t *testing.T) {
 
 	university := model.University{UniversityName: "Ataturk University"}
@@ -68,7 +67,6 @@ func TestDefaultUniversityService_Create(t *testing.T) {
 	}
 
 }
-
 func TestDefaultUniversityService_Edit(t *testing.T) {
 
 	university := model.University{UniversityName: "Sakarya University"}
@@ -86,17 +84,17 @@ func TestDefaultUniversityService_Edit(t *testing.T) {
 		t.Log("University cannot update")
 	}
 }
-
 func TestDefaultUniversityService_Delete(t *testing.T) {
 
-	id := "1"
+	id_int := 1
 	mockCtrl := gomock.NewController(t)
 	defer mockCtrl.Finish()
 	mockRepository := mocks.NewMockIUniversityRepository(mockCtrl)
-	mockRepository.EXPECT().DeleteUniversity(gomock.Eq(id)).Return(nil).Times(1)
+	mockRepository.EXPECT().DeleteUniversity(id_int).Return(nil).Times(1)
 
 	universityService := service.NewDefaultUniversityService(mockRepository)
-	err := universityService.Delete(id)
+	id_str := "1"
+	err := universityService.Delete(id_str)
 
 	if assert.Nil(t, err) {
 		t.Log("Success delete University")
