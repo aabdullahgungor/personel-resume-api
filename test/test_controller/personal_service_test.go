@@ -5,8 +5,10 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io"
 	"net/http"
 	"net/http/httptest"
+	"net/url"
 	"testing"
 
 	"github.com/aabdullahgungor/personal-resume-api/internal/controller"
@@ -26,14 +28,18 @@ func TestPersonalController_GetAllPersonals(t *testing.T) {
 		mockService := mocks.NewMockIPersonalService(mockCtrl)
 		mockService.EXPECT().GetAll().Return([]model.Personal{}, errors.New("hata!")).AnyTimes()
 
+		gin.SetMode(gin.TestMode)
 		w := httptest.NewRecorder()
-		gin.SetMode(gin.ReleaseMode)
-		ctx, r := gin.CreateTestContext(w)
+		ctx, _ := gin.CreateTestContext(w)
+		ctx.Request = &http.Request{
+			Header: make(http.Header),
+			URL:    &url.URL{},
+		}
+		ctx.Request.Method = "GET"
+		ctx.Request.Header.Set("Content-Type", "application/json")
 		personalTestController := controller.NewPersonalController(mockService)
 		personalTestController.GetAllPersonals(ctx)
 
-		req, _ := http.NewRequest("GET", "api/v1/personals", nil)
-		r.ServeHTTP(w, req)
 		assert.Equal(t, http.StatusNotFound, w.Code)
 		fmt.Println(w.Code)
 	})
@@ -44,14 +50,18 @@ func TestPersonalController_GetAllPersonals(t *testing.T) {
 		mockService := mocks.NewMockIPersonalService(mockCtrl)
 		mockService.EXPECT().GetAll().Return([]model.Personal{}, nil).AnyTimes()
 
+		gin.SetMode(gin.TestMode)
 		w := httptest.NewRecorder()
-		gin.SetMode(gin.ReleaseMode)
-		ctx, r := gin.CreateTestContext(w)
+		ctx, _ := gin.CreateTestContext(w)
+		ctx.Request = &http.Request{
+			Header: make(http.Header),
+			URL:    &url.URL{},
+		}
+		ctx.Request.Method = "GET"
+		ctx.Request.Header.Set("Content-Type", "application/json")
 		personalTestController := controller.NewPersonalController(mockService)
 		personalTestController.GetAllPersonals(ctx)
 
-		req, _ := http.NewRequest("GET", "api/v1/personals", nil)
-		r.ServeHTTP(w, req)
 		assert.Equal(t, http.StatusOK, w.Code)
 		fmt.Println(w.Code)
 
@@ -60,26 +70,37 @@ func TestPersonalController_GetAllPersonals(t *testing.T) {
 
 func TestPersonalController_GetPersonalById(t *testing.T) {
 	t.Run("Error", func(t *testing.T) {
-		var id string
+		id := "1"
 		mockCtrl := gomock.NewController(t)
 		defer mockCtrl.Finish()
 		mockService := mocks.NewMockIPersonalService(mockCtrl)
 		mockService.EXPECT().GetById(id).Return(model.Personal{}, service.ErrPersonalNotFound).AnyTimes()
 
+		gin.SetMode(gin.TestMode)
 		w := httptest.NewRecorder()
-		gin.SetMode(gin.ReleaseMode)
-		ctx, r := gin.CreateTestContext(w)
+		ctx, _ := gin.CreateTestContext(w)
+		ctx.Request = &http.Request{
+			Header: make(http.Header),
+			URL:    &url.URL{},
+		}
+		ctx.Request.Method = "GET"
+		ctx.Request.Header.Set("Content-Type", "application/json")
+		params := []gin.Param{
+			{
+				Key:   "id",
+				Value: "1",
+			},
+		}
+		ctx.Params = params
 		personalTestController := controller.NewPersonalController(mockService)
 		personalTestController.GetPersonalById(ctx)
 
-		req, _ := http.NewRequest("GET", "api/v1/personals/:id", nil)
-		r.ServeHTTP(w, req)
 		assert.Equal(t, http.StatusNotFound, w.Code)
 		fmt.Println(w.Code)
 	})
 
 	t.Run("Success", func(t *testing.T) {
-		var id string
+		id := "1"
 		mockCtrl := gomock.NewController(t)
 		defer mockCtrl.Finish()
 		mockService := mocks.NewMockIPersonalService(mockCtrl)
@@ -92,14 +113,25 @@ func TestPersonalController_GetPersonalById(t *testing.T) {
 			UserType: "admin",
 		}, nil).AnyTimes()
 
+		gin.SetMode(gin.TestMode)
 		w := httptest.NewRecorder()
-		gin.SetMode(gin.ReleaseMode)
-		ctx, r := gin.CreateTestContext(w)
+		ctx, _ := gin.CreateTestContext(w)
+		ctx.Request = &http.Request{
+			Header: make(http.Header),
+			URL:    &url.URL{},
+		}
+		ctx.Request.Method = "GET"
+		ctx.Request.Header.Set("Content-Type", "application/json")
+		params := []gin.Param{
+			{
+				Key:   "id",
+				Value: "1",
+			},
+		}
+		ctx.Params = params
 		personalTestController := controller.NewPersonalController(mockService)
 		personalTestController.GetPersonalById(ctx)
 
-		req, _ := http.NewRequest("GET", "api/v1/personals/:id", nil)
-		r.ServeHTTP(w, req)
 		assert.Equal(t, http.StatusOK, w.Code)
 		fmt.Println(w.Code)
 
@@ -129,16 +161,19 @@ func TestPersonalController_CreatePersonal(t *testing.T) {
 		mockService := mocks.NewMockIPersonalService(mockCtrl)
 		mockService.EXPECT().Create(&personal).Return(errors.New("hata")).AnyTimes()
 
+		gin.SetMode(gin.TestMode)
 		w := httptest.NewRecorder()
-		gin.SetMode(gin.ReleaseMode)
-		ctx, r := gin.CreateTestContext(w)
+		ctx, _ := gin.CreateTestContext(w)
+		ctx.Request = &http.Request{
+			Header: make(http.Header),
+			URL:    &url.URL{},
+		}
+		ctx.Request.Method = "POST"
+		ctx.Request.Header.Set("Content-Type", "application/json")
+		ctx.Request.Body = io.NopCloser(bytePersonal)
 		personalTestController := controller.NewPersonalController(mockService)
 		personalTestController.CreatePersonal(ctx)
-		req, err := http.NewRequest("POST", "api/v1/personals", bytePersonal)
-		if err != nil {
-			fmt.Println(err)
-		}
-		r.ServeHTTP(w, req)
+
 		assert.Equal(t, http.StatusNotAcceptable, w.Code)
 		t.Log(w.Body.String())
 	})
@@ -160,16 +195,19 @@ func TestPersonalController_CreatePersonal(t *testing.T) {
 		mockService := mocks.NewMockIPersonalService(mockCtrl)
 		mockService.EXPECT().Create(&personal).Return(nil).AnyTimes()
 
+		gin.SetMode(gin.TestMode)
 		w := httptest.NewRecorder()
-		gin.SetMode(gin.ReleaseMode)
-		ctx, r := gin.CreateTestContext(w)
+		ctx, _ := gin.CreateTestContext(w)
+		ctx.Request = &http.Request{
+			Header: make(http.Header),
+			URL:    &url.URL{},
+		}
+		ctx.Request.Method = "POST"
+		ctx.Request.Header.Set("Content-Type", "application/json")
+		ctx.Request.Body = io.NopCloser(bytePersonal)
 		personalTestController := controller.NewPersonalController(mockService)
 		personalTestController.CreatePersonal(ctx)
-		req, err := http.NewRequest("POST", "api/v1/personals", bytePersonal)
-		if err != nil {
-			fmt.Println(err)
-		}
-		r.ServeHTTP(w, req)
+
 		assert.Equal(t, http.StatusCreated, w.Code)
 		t.Log(w.Body.String())
 
@@ -194,16 +232,19 @@ func TestPersonalController_EditPersonal(t *testing.T) {
 		mockService := mocks.NewMockIPersonalService(mockCtrl)
 		mockService.EXPECT().Edit(&personal).Return(errors.New("hata")).AnyTimes()
 
+		gin.SetMode(gin.TestMode)
 		w := httptest.NewRecorder()
-		gin.SetMode(gin.ReleaseMode)
-		ctx, r := gin.CreateTestContext(w)
+		ctx, _ := gin.CreateTestContext(w)
+		ctx.Request = &http.Request{
+			Header: make(http.Header),
+			URL:    &url.URL{},
+		}
+		ctx.Request.Method = "PUT"
+		ctx.Request.Header.Set("Content-Type", "application/json")
+		ctx.Request.Body = io.NopCloser(bytePersonal)
 		personalTestController := controller.NewPersonalController(mockService)
 		personalTestController.EditPersonal(ctx)
-		req, err := http.NewRequest("PUT", "api/v1/personals", bytePersonal)
-		if err != nil {
-			fmt.Println(err)
-		}
-		r.ServeHTTP(w, req)
+
 		assert.Equal(t, http.StatusNotAcceptable, w.Code)
 		t.Log(w.Body.String())
 	})
@@ -225,16 +266,19 @@ func TestPersonalController_EditPersonal(t *testing.T) {
 		mockService := mocks.NewMockIPersonalService(mockCtrl)
 		mockService.EXPECT().Edit(&personal).Return(nil).AnyTimes()
 
+		gin.SetMode(gin.TestMode)
 		w := httptest.NewRecorder()
-		gin.SetMode(gin.ReleaseMode)
-		ctx, r := gin.CreateTestContext(w)
+		ctx, _ := gin.CreateTestContext(w)
+		ctx.Request = &http.Request{
+			Header: make(http.Header),
+			URL:    &url.URL{},
+		}
+		ctx.Request.Method = "PUT"
+		ctx.Request.Header.Set("Content-Type", "application/json")
+		ctx.Request.Body = io.NopCloser(bytePersonal)
 		personalTestController := controller.NewPersonalController(mockService)
 		personalTestController.EditPersonal(ctx)
-		req, err := http.NewRequest("PUT", "api/v1/personals", bytePersonal)
-		if err != nil {
-			fmt.Println(err)
-		}
-		r.ServeHTTP(w, req)
+
 		assert.Equal(t, http.StatusCreated, w.Code)
 		t.Log(w.Body.String())
 	})
@@ -242,15 +286,28 @@ func TestPersonalController_EditPersonal(t *testing.T) {
 
 func TestPersonalController_DeletePersonal(t *testing.T) {
 	t.Run("Error", func(t *testing.T) {
-		var id string
+		id := "1"
 		mockCtrl := gomock.NewController(t)
 		defer mockCtrl.Finish()
 		mockService := mocks.NewMockIPersonalService(mockCtrl)
 		mockService.EXPECT().Delete(id).Return(service.ErrPersonalNotFound).AnyTimes()
 
+		gin.SetMode(gin.TestMode)
 		w := httptest.NewRecorder()
-		gin.SetMode(gin.ReleaseMode)
 		ctx, _ := gin.CreateTestContext(w)
+		ctx.Request = &http.Request{
+			Header: make(http.Header),
+			URL:    &url.URL{},
+		}
+		ctx.Request.Method = "DELETE"
+		ctx.Request.Header.Set("Content-Type", "application/json")
+		params := []gin.Param{
+			{
+				Key:   "id",
+				Value: "1",
+			},
+		}
+		ctx.Params = params
 		personalTestController := controller.NewPersonalController(mockService)
 		personalTestController.DeletePersonal(ctx)
 
@@ -259,15 +316,28 @@ func TestPersonalController_DeletePersonal(t *testing.T) {
 	})
 
 	t.Run("Success", func(t *testing.T) {
-		var id string
+		id := "1"
 		mockCtrl := gomock.NewController(t)
 		defer mockCtrl.Finish()
 		mockService := mocks.NewMockIPersonalService(mockCtrl)
 		mockService.EXPECT().Delete(id).Return(nil).AnyTimes()
 
+		gin.SetMode(gin.TestMode)
 		w := httptest.NewRecorder()
-		gin.SetMode(gin.ReleaseMode)
 		ctx, _ := gin.CreateTestContext(w)
+		ctx.Request = &http.Request{
+			Header: make(http.Header),
+			URL:    &url.URL{},
+		}
+		ctx.Request.Method = "DELETE"
+		ctx.Request.Header.Set("Content-Type", "application/json")
+		params := []gin.Param{
+			{
+				Key:   "id",
+				Value: "1",
+			},
+		}
+		ctx.Params = params
 		personalTestController := controller.NewPersonalController(mockService)
 		personalTestController.DeletePersonal(ctx)
 
