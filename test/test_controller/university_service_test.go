@@ -5,8 +5,10 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io"
 	"net/http"
 	"net/http/httptest"
+	"net/url"
 	"testing"
 
 	"github.com/aabdullahgungor/personal-resume-api/internal/controller"
@@ -26,14 +28,18 @@ func TestUniversityController_GetAllUniversities(t *testing.T) {
 		mockService := mocks.NewMockIUniversityService(mockCtrl)
 		mockService.EXPECT().GetAll().Return([]model.University{}, errors.New("hata!")).AnyTimes()
 
+		gin.SetMode(gin.TestMode)
 		w := httptest.NewRecorder()
-		gin.SetMode(gin.ReleaseMode)
-		ctx, r := gin.CreateTestContext(w)
+		ctx, _ := gin.CreateTestContext(w)
+		ctx.Request = &http.Request{
+			Header: make(http.Header),
+			URL:    &url.URL{},
+		}
+		ctx.Request.Method = "GET"
+		ctx.Request.Header.Set("Content-Type", "application/json")
 		universityTestController := controller.NewUniversityController(mockService)
 		universityTestController.GetAllUniversities(ctx)
 
-		req, _ := http.NewRequest("GET", "api/v1/universities", nil)
-		r.ServeHTTP(w, req)
 		assert.Equal(t, http.StatusNotFound, w.Code)
 		fmt.Println(w.Code)
 	})
@@ -44,14 +50,18 @@ func TestUniversityController_GetAllUniversities(t *testing.T) {
 		mockService := mocks.NewMockIUniversityService(mockCtrl)
 		mockService.EXPECT().GetAll().Return([]model.University{}, nil).AnyTimes()
 
+		gin.SetMode(gin.TestMode)
 		w := httptest.NewRecorder()
-		gin.SetMode(gin.ReleaseMode)
-		ctx, r := gin.CreateTestContext(w)
+		ctx, _ := gin.CreateTestContext(w)
+		ctx.Request = &http.Request{
+			Header: make(http.Header),
+			URL:    &url.URL{},
+		}
+		ctx.Request.Method = "GET"
+		ctx.Request.Header.Set("Content-Type", "application/json")
 		universityTestController := controller.NewUniversityController(mockService)
 		universityTestController.GetAllUniversities(ctx)
 
-		req, _ := http.NewRequest("GET", "api/v1/universities", nil)
-		r.ServeHTTP(w, req)
 		assert.Equal(t, http.StatusOK, w.Code)
 		fmt.Println(w.Code)
 
@@ -60,26 +70,37 @@ func TestUniversityController_GetAllUniversities(t *testing.T) {
 
 func TestUniversityController_GetUniversityById(t *testing.T) {
 	t.Run("Error", func(t *testing.T) {
-		var id string
+		id := "1"
 		mockCtrl := gomock.NewController(t)
 		defer mockCtrl.Finish()
 		mockService := mocks.NewMockIUniversityService(mockCtrl)
 		mockService.EXPECT().GetById(id).Return(model.University{}, service.ErrUniversityNotFound).AnyTimes()
 
+		gin.SetMode(gin.TestMode)
 		w := httptest.NewRecorder()
-		gin.SetMode(gin.ReleaseMode)
-		ctx, r := gin.CreateTestContext(w)
+		ctx, _ := gin.CreateTestContext(w)
+		ctx.Request = &http.Request{
+			Header: make(http.Header),
+			URL:    &url.URL{},
+		}
+		ctx.Request.Method = "GET"
+		ctx.Request.Header.Set("Content-Type", "application/json")
+		params := []gin.Param{
+			{
+				Key:   "id",
+				Value: "1",
+			},
+		}
+		ctx.Params = params
 		universityTestController := controller.NewUniversityController(mockService)
 		universityTestController.GetUniversityById(ctx)
 
-		req, _ := http.NewRequest("GET", "api/v1/universities/:id", nil)
-		r.ServeHTTP(w, req)
 		assert.Equal(t, http.StatusNotFound, w.Code)
 		fmt.Println(w.Code)
 	})
 
 	t.Run("Success", func(t *testing.T) {
-		var id string
+		id := "1"
 		mockCtrl := gomock.NewController(t)
 		defer mockCtrl.Finish()
 		mockService := mocks.NewMockIUniversityService(mockCtrl)
@@ -87,14 +108,25 @@ func TestUniversityController_GetUniversityById(t *testing.T) {
 			UniversityName: "Ataturk University",
 		}, nil).AnyTimes()
 
+		gin.SetMode(gin.TestMode)
 		w := httptest.NewRecorder()
-		gin.SetMode(gin.ReleaseMode)
-		ctx, r := gin.CreateTestContext(w)
+		ctx, _ := gin.CreateTestContext(w)
+		ctx.Request = &http.Request{
+			Header: make(http.Header),
+			URL:    &url.URL{},
+		}
+		ctx.Request.Method = "GET"
+		ctx.Request.Header.Set("Content-Type", "application/json")
+		params := []gin.Param{
+			{
+				Key:   "id",
+				Value: "1",
+			},
+		}
+		ctx.Params = params
 		universityTestController := controller.NewUniversityController(mockService)
 		universityTestController.GetUniversityById(ctx)
 
-		req, _ := http.NewRequest("GET", "api/v1/universites/:id", nil)
-		r.ServeHTTP(w, req)
 		assert.Equal(t, http.StatusOK, w.Code)
 		fmt.Println(w.Code)
 
@@ -119,16 +151,19 @@ func TestUniversityController_CreateUniversity(t *testing.T) {
 		mockService := mocks.NewMockIUniversityService(mockCtrl)
 		mockService.EXPECT().Create(&university).Return(errors.New("hata")).AnyTimes()
 
+		gin.SetMode(gin.TestMode)
 		w := httptest.NewRecorder()
-		gin.SetMode(gin.ReleaseMode)
-		ctx, r := gin.CreateTestContext(w)
+		ctx, _ := gin.CreateTestContext(w)
+		ctx.Request = &http.Request{
+			Header: make(http.Header),
+			URL:    &url.URL{},
+		}
+		ctx.Request.Method = "POST"
+		ctx.Request.Header.Set("Content-Type", "application/json")
+		ctx.Request.Body = io.NopCloser(byteUniversity)
 		universityTestController := controller.NewUniversityController(mockService)
 		universityTestController.CreateUniversity(ctx)
-		req, err := http.NewRequest("POST", "api/v1/universities", byteUniversity)
-		if err != nil {
-			fmt.Println(err)
-		}
-		r.ServeHTTP(w, req)
+
 		assert.Equal(t, http.StatusNotAcceptable, w.Code)
 		t.Log(w.Body.String())
 	})
@@ -145,16 +180,19 @@ func TestUniversityController_CreateUniversity(t *testing.T) {
 		mockService := mocks.NewMockIUniversityService(mockCtrl)
 		mockService.EXPECT().Create(&university).Return(nil).AnyTimes()
 
+		gin.SetMode(gin.TestMode)
 		w := httptest.NewRecorder()
-		gin.SetMode(gin.ReleaseMode)
-		ctx, r := gin.CreateTestContext(w)
+		ctx, _ := gin.CreateTestContext(w)
+		ctx.Request = &http.Request{
+			Header: make(http.Header),
+			URL:    &url.URL{},
+		}
+		ctx.Request.Method = "POST"
+		ctx.Request.Header.Set("Content-Type", "application/json")
+		ctx.Request.Body = io.NopCloser(byteUniversity)
 		universityTestController := controller.NewUniversityController(mockService)
 		universityTestController.CreateUniversity(ctx)
-		req, err := http.NewRequest("POST", "api/v1/universities", byteUniversity)
-		if err != nil {
-			fmt.Println(err)
-		}
-		r.ServeHTTP(w, req)
+
 		assert.Equal(t, http.StatusCreated, w.Code)
 		t.Log(w.Body.String())
 
@@ -174,16 +212,19 @@ func TestUniversityController_EditUniversity(t *testing.T) {
 		mockService := mocks.NewMockIUniversityService(mockCtrl)
 		mockService.EXPECT().Edit(&university).Return(errors.New("hata")).AnyTimes()
 
+		gin.SetMode(gin.TestMode)
 		w := httptest.NewRecorder()
-		gin.SetMode(gin.ReleaseMode)
-		ctx, r := gin.CreateTestContext(w)
+		ctx, _ := gin.CreateTestContext(w)
+		ctx.Request = &http.Request{
+			Header: make(http.Header),
+			URL:    &url.URL{},
+		}
+		ctx.Request.Method = "PUT"
+		ctx.Request.Header.Set("Content-Type", "application/json")
+		ctx.Request.Body = io.NopCloser(byteUniversity)
 		universityTestController := controller.NewUniversityController(mockService)
 		universityTestController.EditUniversity(ctx)
-		req, err := http.NewRequest("PUT", "api/v1/universities", byteUniversity)
-		if err != nil {
-			fmt.Println(err)
-		}
-		r.ServeHTTP(w, req)
+
 		assert.Equal(t, http.StatusNotAcceptable, w.Code)
 		t.Log(w.Body.String())
 	})
@@ -200,16 +241,19 @@ func TestUniversityController_EditUniversity(t *testing.T) {
 		mockService := mocks.NewMockIUniversityService(mockCtrl)
 		mockService.EXPECT().Edit(&university).Return(nil).AnyTimes()
 
+		gin.SetMode(gin.TestMode)
 		w := httptest.NewRecorder()
-		gin.SetMode(gin.ReleaseMode)
-		ctx, r := gin.CreateTestContext(w)
+		ctx, _ := gin.CreateTestContext(w)
+		ctx.Request = &http.Request{
+			Header: make(http.Header),
+			URL:    &url.URL{},
+		}
+		ctx.Request.Method = "PUT"
+		ctx.Request.Header.Set("Content-Type", "application/json")
+		ctx.Request.Body = io.NopCloser(byteUniversity)
 		universityTestController := controller.NewUniversityController(mockService)
 		universityTestController.EditUniversity(ctx)
-		req, err := http.NewRequest("PUT", "api/v1/universities", byteUniversity)
-		if err != nil {
-			fmt.Println(err)
-		}
-		r.ServeHTTP(w, req)
+
 		assert.Equal(t, http.StatusCreated, w.Code)
 		t.Log(w.Body.String())
 	})
@@ -217,15 +261,28 @@ func TestUniversityController_EditUniversity(t *testing.T) {
 
 func TestUniversityController_DeleteUniversity(t *testing.T) {
 	t.Run("Error", func(t *testing.T) {
-		var id string
+		id := "1"
 		mockCtrl := gomock.NewController(t)
 		defer mockCtrl.Finish()
 		mockService := mocks.NewMockIUniversityService(mockCtrl)
 		mockService.EXPECT().Delete(id).Return(service.ErrUniversityNotFound).AnyTimes()
 
+		gin.SetMode(gin.TestMode)
 		w := httptest.NewRecorder()
-		gin.SetMode(gin.ReleaseMode)
 		ctx, _ := gin.CreateTestContext(w)
+		ctx.Request = &http.Request{
+			Header: make(http.Header),
+			URL:    &url.URL{},
+		}
+		ctx.Request.Method = "DELETE"
+		ctx.Request.Header.Set("Content-Type", "application/json")
+		params := []gin.Param{
+			{
+				Key:   "id",
+				Value: "1",
+			},
+		}
+		ctx.Params = params
 		universityTestController := controller.NewUniversityController(mockService)
 		universityTestController.DeleteUniversity(ctx)
 
@@ -234,15 +291,28 @@ func TestUniversityController_DeleteUniversity(t *testing.T) {
 	})
 
 	t.Run("Success", func(t *testing.T) {
-		var id string
+		id := "1"
 		mockCtrl := gomock.NewController(t)
 		defer mockCtrl.Finish()
 		mockService := mocks.NewMockIUniversityService(mockCtrl)
 		mockService.EXPECT().Delete(id).Return(nil).AnyTimes()
 
+		gin.SetMode(gin.TestMode)
 		w := httptest.NewRecorder()
-		gin.SetMode(gin.ReleaseMode)
 		ctx, _ := gin.CreateTestContext(w)
+		ctx.Request = &http.Request{
+			Header: make(http.Header),
+			URL:    &url.URL{},
+		}
+		ctx.Request.Method = "DELETE"
+		ctx.Request.Header.Set("Content-Type", "application/json")
+		params := []gin.Param{
+			{
+				Key:   "id",
+				Value: "1",
+			},
+		}
+		ctx.Params = params
 		universityTestController := controller.NewUniversityController(mockService)
 		universityTestController.DeleteUniversity(ctx)
 
