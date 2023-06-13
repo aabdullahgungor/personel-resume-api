@@ -5,8 +5,10 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io"
 	"net/http"
 	"net/http/httptest"
+	"net/url"
 	"testing"
 
 	"github.com/aabdullahgungor/personal-resume-api/internal/controller"
@@ -26,14 +28,18 @@ func TestExperienceController_GetAllExperiences(t *testing.T) {
 		mockService := mocks.NewMockIExperienceService(mockCtrl)
 		mockService.EXPECT().GetAll().Return([]model.Experience{}, errors.New("hata!")).AnyTimes()
 
+		gin.SetMode(gin.TestMode)
 		w := httptest.NewRecorder()
-		gin.SetMode(gin.ReleaseMode)
-		ctx, r := gin.CreateTestContext(w)
+		ctx, _ := gin.CreateTestContext(w)
+		ctx.Request = &http.Request{
+			Header: make(http.Header),
+			URL:    &url.URL{},
+		}
+		ctx.Request.Method = "GET"
+		ctx.Request.Header.Set("Content-Type", "application/json")
 		experienceTestController := controller.NewExperienceController(mockService)
 		experienceTestController.GetAllExperiences(ctx)
 
-		req, _ := http.NewRequest("GET", "api/v1/experiences", nil)
-		r.ServeHTTP(w, req)
 		assert.Equal(t, http.StatusNotFound, w.Code)
 		fmt.Println(w.Code)
 	})
@@ -44,42 +50,56 @@ func TestExperienceController_GetAllExperiences(t *testing.T) {
 		mockService := mocks.NewMockIExperienceService(mockCtrl)
 		mockService.EXPECT().GetAll().Return([]model.Experience{}, nil).AnyTimes()
 
+		gin.SetMode(gin.TestMode)
 		w := httptest.NewRecorder()
-		gin.SetMode(gin.ReleaseMode)
-		ctx, r := gin.CreateTestContext(w)
+		ctx, _ := gin.CreateTestContext(w)
+		ctx.Request = &http.Request{
+			Header: make(http.Header),
+			URL:    &url.URL{},
+		}
+		ctx.Request.Method = "GET"
+		ctx.Request.Header.Set("Content-Type", "application/json")
 		experienceTestController := controller.NewExperienceController(mockService)
 		experienceTestController.GetAllExperiences(ctx)
 
-		req, _ := http.NewRequest("GET", "api/v1/experiences", nil)
-		r.ServeHTTP(w, req)
 		assert.Equal(t, http.StatusOK, w.Code)
 		fmt.Println(w.Code)
-
 	})
 }
 
 func TestExperienceController_GetExperienceById(t *testing.T) {
 	t.Run("Error", func(t *testing.T) {
-		var id string
+		id := "1"
 		mockCtrl := gomock.NewController(t)
 		defer mockCtrl.Finish()
 		mockService := mocks.NewMockIExperienceService(mockCtrl)
 		mockService.EXPECT().GetById(id).Return(model.Experience{}, service.ErrExperienceNotFound).AnyTimes()
 
+		gin.SetMode(gin.TestMode)
 		w := httptest.NewRecorder()
-		gin.SetMode(gin.ReleaseMode)
-		ctx, r := gin.CreateTestContext(w)
+		ctx, _ := gin.CreateTestContext(w)
+		ctx.Request = &http.Request{
+			Header: make(http.Header),
+			URL:    &url.URL{},
+		}
+		ctx.Request.Method = "GET"
+		ctx.Request.Header.Set("Content-Type", "application/json")
+		params := []gin.Param{
+			{
+				Key:   "id",
+				Value: "1",
+			},
+		}
+		ctx.Params = params
 		experienceTestController := controller.NewExperienceController(mockService)
 		experienceTestController.GetExperienceById(ctx)
 
-		req, _ := http.NewRequest("GET", "api/v1/experiences/:id", nil)
-		r.ServeHTTP(w, req)
 		assert.Equal(t, http.StatusNotFound, w.Code)
 		fmt.Println(w.Code)
 	})
 
 	t.Run("Success", func(t *testing.T) {
-		var id string
+		id := "1"
 		mockCtrl := gomock.NewController(t)
 		defer mockCtrl.Finish()
 		mockService := mocks.NewMockIExperienceService(mockCtrl)
@@ -91,14 +111,24 @@ func TestExperienceController_GetExperienceById(t *testing.T) {
 			PersonalID:  1,
 		}, nil).AnyTimes()
 
+		gin.SetMode(gin.TestMode)
 		w := httptest.NewRecorder()
-		gin.SetMode(gin.ReleaseMode)
-		ctx, r := gin.CreateTestContext(w)
+		ctx, _ := gin.CreateTestContext(w)
+		ctx.Request = &http.Request{
+			Header: make(http.Header),
+			URL:    &url.URL{},
+		}
+		ctx.Request.Method = "GET"
+		ctx.Request.Header.Set("Content-Type", "application/json")
+		params := []gin.Param{
+			{
+				Key:   "id",
+				Value: "1",
+			},
+		}
+		ctx.Params = params
 		experienceTestController := controller.NewExperienceController(mockService)
 		experienceTestController.GetExperienceById(ctx)
-
-		req, _ := http.NewRequest("GET", "api/v1/experiences/:id", nil)
-		r.ServeHTTP(w, req)
 		assert.Equal(t, http.StatusOK, w.Code)
 		fmt.Println(w.Code)
 
@@ -127,16 +157,19 @@ func TestExperienceController_CreateExperience(t *testing.T) {
 		mockService := mocks.NewMockIExperienceService(mockCtrl)
 		mockService.EXPECT().Create(&experience).Return(errors.New("hata")).AnyTimes()
 
+		gin.SetMode(gin.TestMode)
 		w := httptest.NewRecorder()
-		gin.SetMode(gin.ReleaseMode)
-		ctx, r := gin.CreateTestContext(w)
+		ctx, _ := gin.CreateTestContext(w)
+		ctx.Request = &http.Request{
+			Header: make(http.Header),
+			URL:    &url.URL{},
+		}
+		ctx.Request.Method = "POST"
+		ctx.Request.Header.Set("Content-Type", "application/json")
+		ctx.Request.Body = io.NopCloser(byteExperience)
 		experienceTestController := controller.NewExperienceController(mockService)
 		experienceTestController.CreateExperience(ctx)
-		req, err := http.NewRequest("POST", "api/v1/experiences", byteExperience)
-		if err != nil {
-			fmt.Println(err)
-		}
-		r.ServeHTTP(w, req)
+
 		assert.Equal(t, http.StatusNotAcceptable, w.Code)
 		t.Log(w.Body.String())
 	})
@@ -157,16 +190,19 @@ func TestExperienceController_CreateExperience(t *testing.T) {
 		mockService := mocks.NewMockIExperienceService(mockCtrl)
 		mockService.EXPECT().Create(&experience).Return(nil).AnyTimes()
 
+		gin.SetMode(gin.TestMode)
 		w := httptest.NewRecorder()
-		gin.SetMode(gin.ReleaseMode)
-		ctx, r := gin.CreateTestContext(w)
+		ctx, _ := gin.CreateTestContext(w)
+		ctx.Request = &http.Request{
+			Header: make(http.Header),
+			URL:    &url.URL{},
+		}
+		ctx.Request.Method = "POST"
+		ctx.Request.Header.Set("Content-Type", "application/json")
+		ctx.Request.Body = io.NopCloser(byteExperience)
 		experienceTestController := controller.NewExperienceController(mockService)
 		experienceTestController.CreateExperience(ctx)
-		req, err := http.NewRequest("POST", "api/v1/experiences", byteExperience)
-		if err != nil {
-			fmt.Println(err)
-		}
-		r.ServeHTTP(w, req)
+
 		assert.Equal(t, http.StatusCreated, w.Code)
 		t.Log(w.Body.String())
 
@@ -190,16 +226,19 @@ func TestExperienceController_EditExperience(t *testing.T) {
 		mockService := mocks.NewMockIExperienceService(mockCtrl)
 		mockService.EXPECT().Edit(&experience).Return(errors.New("hata")).AnyTimes()
 
+		gin.SetMode(gin.TestMode)
 		w := httptest.NewRecorder()
-		gin.SetMode(gin.ReleaseMode)
-		ctx, r := gin.CreateTestContext(w)
+		ctx, _ := gin.CreateTestContext(w)
+		ctx.Request = &http.Request{
+			Header: make(http.Header),
+			URL:    &url.URL{},
+		}
+		ctx.Request.Method = "PUT"
+		ctx.Request.Header.Set("Content-Type", "application/json")
+		ctx.Request.Body = io.NopCloser(byteExperience)
 		experienceTestController := controller.NewExperienceController(mockService)
 		experienceTestController.EditExperience(ctx)
-		req, err := http.NewRequest("PUT", "api/v1/experiences", byteExperience)
-		if err != nil {
-			fmt.Println(err)
-		}
-		r.ServeHTTP(w, req)
+
 		assert.Equal(t, http.StatusNotAcceptable, w.Code)
 		t.Log(w.Body.String())
 	})
@@ -220,16 +259,19 @@ func TestExperienceController_EditExperience(t *testing.T) {
 		mockService := mocks.NewMockIExperienceService(mockCtrl)
 		mockService.EXPECT().Edit(&experience).Return(nil).AnyTimes()
 
+		gin.SetMode(gin.TestMode)
 		w := httptest.NewRecorder()
-		gin.SetMode(gin.ReleaseMode)
-		ctx, r := gin.CreateTestContext(w)
+		ctx, _ := gin.CreateTestContext(w)
+		ctx.Request = &http.Request{
+			Header: make(http.Header),
+			URL:    &url.URL{},
+		}
+		ctx.Request.Method = "PUT"
+		ctx.Request.Header.Set("Content-Type", "application/json")
+		ctx.Request.Body = io.NopCloser(byteExperience)
 		experienceTestController := controller.NewExperienceController(mockService)
 		experienceTestController.EditExperience(ctx)
-		req, err := http.NewRequest("PUT", "api/v1/experiences", byteExperience)
-		if err != nil {
-			fmt.Println(err)
-		}
-		r.ServeHTTP(w, req)
+
 		assert.Equal(t, http.StatusCreated, w.Code)
 		t.Log(w.Body.String())
 	})
@@ -237,15 +279,28 @@ func TestExperienceController_EditExperience(t *testing.T) {
 
 func TestExperienceController_DeleteExperience(t *testing.T) {
 	t.Run("Error", func(t *testing.T) {
-		var id string
+		id := "1"
 		mockCtrl := gomock.NewController(t)
 		defer mockCtrl.Finish()
 		mockService := mocks.NewMockIExperienceService(mockCtrl)
 		mockService.EXPECT().Delete(id).Return(service.ErrExperienceNotFound).AnyTimes()
 
+		gin.SetMode(gin.TestMode)
 		w := httptest.NewRecorder()
-		gin.SetMode(gin.ReleaseMode)
 		ctx, _ := gin.CreateTestContext(w)
+		ctx.Request = &http.Request{
+			Header: make(http.Header),
+			URL:    &url.URL{},
+		}
+		ctx.Request.Method = "DELETE"
+		ctx.Request.Header.Set("Content-Type", "application/json")
+		params := []gin.Param{
+			{
+				Key:   "id",
+				Value: "1",
+			},
+		}
+		ctx.Params = params
 		experienceTestController := controller.NewExperienceController(mockService)
 		experienceTestController.DeleteExperience(ctx)
 
@@ -254,15 +309,28 @@ func TestExperienceController_DeleteExperience(t *testing.T) {
 	})
 
 	t.Run("Success", func(t *testing.T) {
-		var id string
+		id := "1"
 		mockCtrl := gomock.NewController(t)
 		defer mockCtrl.Finish()
 		mockService := mocks.NewMockIExperienceService(mockCtrl)
 		mockService.EXPECT().Delete(id).Return(nil).AnyTimes()
 
+		gin.SetMode(gin.TestMode)
 		w := httptest.NewRecorder()
-		gin.SetMode(gin.ReleaseMode)
 		ctx, _ := gin.CreateTestContext(w)
+		ctx.Request = &http.Request{
+			Header: make(http.Header),
+			URL:    &url.URL{},
+		}
+		ctx.Request.Method = "DELETE"
+		ctx.Request.Header.Set("Content-Type", "application/json")
+		params := []gin.Param{
+			{
+				Key:   "id",
+				Value: "1",
+			},
+		}
+		ctx.Params = params
 		experienceTestController := controller.NewExperienceController(mockService)
 		experienceTestController.DeleteExperience(ctx)
 
