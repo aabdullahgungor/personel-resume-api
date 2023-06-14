@@ -3,6 +3,7 @@ package database
 import (
 	"fmt"
 	"log"
+	"os"
 	"time"
 
 	"github.com/aabdullahgungor/personal-resume-api/internal/database/migrations"
@@ -10,19 +11,20 @@ import (
 	"gorm.io/gorm"
 )
 
-const (
-	host     = "localhost"
-	port     = 5432
-	user     = "postgres"
-	password = "postgres123"
-	dbname   = "dbresume"
-)
+// const (
+// 	host     = "localhost"
+// 	port     = 5432
+// 	user     = "postgres"
+// 	password = "postgres123"
+// 	dbname   = "dbresume"
+// )
 
 var db *gorm.DB
 
 func StartDB() {
-	connString := fmt.Sprintf("host=%s port=%d user=%s dbname=%s sslmode=disable password=%s", host, port, user, dbname, password)
-
+	connString := os.Getenv("DATABASE_URL")
+	//connString := fmt.Sprintf("host=%s port=%d user=%s dbname=%s sslmode=disable password=%s", host, port, user, dbname, password)
+	//database, err := gorm.Open(postgres.Open(connString), &gorm.Config{})
 	database, err := gorm.Open(postgres.Open(connString), &gorm.Config{})
 
 	if err != nil {
