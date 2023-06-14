@@ -24,6 +24,6 @@ func (s *Server) Run() {
 	router := router.ConfigRouters(s.server)
 
 	log.Printf("Server running at port: %v", s.port)
-	log.Fatal(router.Run("localhost:" + s.port))
+	log.Fatal(router.Run("0.0.0.0:" + s.port))
 
 }
