@@ -21,6 +21,8 @@ RUN go get -v
 
 RUN go build -o main .
 
+#EXPOSE the port
+EXPOSE 8000
 
 ## Our start command which kicks off
 ## our newly created binary executable
