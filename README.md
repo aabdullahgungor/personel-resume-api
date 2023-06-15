@@ -25,8 +25,32 @@ cd personel-resume-api
 ```bash
 docker-compose up  --build  -d
 ```
+### Endpoints
 
-### Open API Doc Preview
+- GET localhost:8000/api/v1/abilities
+- GET localhost:8000/api/v1/abilities/:id
+- POST localhost:8000/api/v1/abilities
+- PUT localhost:8000/api/v1/abilities
+- DELETE localhost:8000/api/v1/abilities/:id
+- GET localhost:8000/api/v1/experiences
+- GET localhost:8000/api/v1/experiences/:id
+- POST localhost:8000/api/v1/experiences
+- PUT localhost:8000/api/v1/experiences
+- DELETE localhost:8000/api/v1/experiences/:id
+- GET localhost:8000/api/v1/personals
+- GET localhost:8000/api/v1/personals/:id
+- POST localhost:8000/api/v1/personals
+- PUT localhost:8000/api/v1/personals
+- DELETE localhost:8000/api/v1/personals/:id
+- GET localhost:8000/api/v1/universities
+- GET localhost:8000/api/v1/universities/:id
+- POST localhost:8000/api/v1/universities
+- PUT localhost:8000/api/v1/universities
+- DELETE localhost:8000/api/v1/universities/:id
+- 
+### Sample API Request and Response
+
+## Open API Doc Preview
 http://localhost:8000/api/v1/swagger/index.html
 
 ![Swagger](.github/images/Swagger.png)
