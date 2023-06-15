@@ -25,7 +25,11 @@ cd personel-resume-api
 ```bash
 docker-compose up  --build  -d
 ```
-Access API using `http://localhost:8000/api/v1`
+### Access API using 
+
+```bash
+http://localhost:8000/api/v1
+```
 
 ### Sample of Endpoints
 
