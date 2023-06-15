@@ -13,3 +13,5 @@ This is an example golang backend application using PostgreSQL database with cle
 
 
 
+### Open API Doc Preview
+![Swagger](.github/images/swagger.png)
