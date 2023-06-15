@@ -11,7 +11,22 @@ This is an example golang backend application using PostgreSQL database with cle
 * PostgreSQL Driver: [GORM](gorm.io/gorm)
 * Test Assertions: [stretchr/testify](https://github.com/stretchr/testify)
 
+## Getting Started
 
+```sh
+# download the project
+git clone https://github.com/aabdullahgungor/personel-resume-api.git
+
+cd personel-resume-api
+```
+
+### Build and run image of docker
+
+```bash
+docker-compose up  --build  -d
+```
 
 ### Open API Doc Preview
+http://localhost:8000/api/v1/swagger/index.html
+
 ![Swagger](.github/images/Swagger.png)
