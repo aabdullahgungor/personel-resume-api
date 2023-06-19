@@ -30,8 +30,10 @@ docker-compose up  --build  -d
 ```bash
 http://localhost:8000/api/v1
 ```
+## Database Diagram
+![Database](.github/images/database_diagram.png)
 
-### Sample of Endpoints
+## Sample of Endpoints
 
 - GET localhost:8000/api/v1/personals
 - GET localhost:8000/api/v1/personals/:id
