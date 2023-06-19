@@ -39,7 +39,6 @@ http://localhost:8000/api/v1
 - PUT localhost:8000/api/v1/personals
 - DELETE localhost:8000/api/v1/personals/:id
 - ........
-### Sample API Request and Response
 
 ## Open API Doc Preview
 http://localhost:8000/api/v1/swagger/index.html
@@ -49,6 +48,7 @@ http://localhost:8000/api/v1/swagger/index.html
 ## How to run the test?
 
 ```bash
-# Run all tests
-go test ./...
+# Run tests
+go test ./test/test_controller -v
+go test ./test/test_service -v
 ```
